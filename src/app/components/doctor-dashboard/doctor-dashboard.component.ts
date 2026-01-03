@@ -186,7 +186,7 @@ export class DoctorDashboardComponent implements OnInit {
     };
     const currentYear = new Date().getFullYear();
     const monthlyData = Array(12).fill(0);
-    const consultationFee = 500; 
+    const consultationFee = 500;
     data.forEach(apt => {
       const aptDate = new Date(apt.appointmentDate);
       if (aptDate.getFullYear() === currentYear && apt.status === 'complete') {
@@ -238,7 +238,7 @@ export class DoctorDashboardComponent implements OnInit {
         </head>
         <body>
           <div class="header">
-            <h1>Nagorik Sheba Healthcare</h1>
+            <h1>BD Healthcare</h1>
             <h3>Appointment Slip</h3>
           </div>
           <table>

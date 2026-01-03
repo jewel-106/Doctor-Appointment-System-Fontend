@@ -188,7 +188,7 @@ export class AppointmentListComponent implements OnInit {
         </head>
         <body>
           <div class="header">
-            <h1>Nagorik Sheba Healthcare</h1>
+            <h1>BD Healthcare</h1>
             <h3>Appointment Slip</h3>
           </div>
           <table>

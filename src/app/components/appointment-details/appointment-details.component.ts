@@ -5,58 +5,58 @@ import { AppointmentService } from '../../services/appointment.service';
 import { AuthService } from '../../services/auth.service';
 import { Appointment } from '../../models/appointment.model';
 @Component({
-    selector: 'app-appointment-details',
-    standalone: true,
-    imports: [CommonModule],
-    templateUrl: './appointment-details.component.html',
-    styleUrls: ['./appointment-details.component.css']
+  selector: 'app-appointment-details',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './appointment-details.component.html',
+  styleUrls: ['./appointment-details.component.css']
 })
 export class AppointmentDetailsComponent implements OnInit {
-    private route = inject(ActivatedRoute);
-    private router = inject(Router);
-    private appointmentService = inject(AppointmentService);
-    private authService = inject(AuthService);
-    appointment: Appointment | null = null;
-    loading = true;
-    currentUser: any = null;
-    isDoctor = false;
-    isAdmin = false;
-    isPatient = false;
-    ngOnInit() {
-        this.currentUser = this.authService.getUser();
-        this.isDoctor = this.authService.hasRole('DOCTOR');
-        this.isAdmin = this.authService.hasRole('ADMIN');
-        this.isPatient = this.authService.hasRole('PATIENT');
-        const id = this.route.snapshot.paramMap.get('id');
-        if (id) {
-            this.loadAppointment(+id);
-        }
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private appointmentService = inject(AppointmentService);
+  private authService = inject(AuthService);
+  appointment: Appointment | null = null;
+  loading = true;
+  currentUser: any = null;
+  isDoctor = false;
+  isAdmin = false;
+  isPatient = false;
+  ngOnInit() {
+    this.currentUser = this.authService.getUser();
+    this.isDoctor = this.authService.hasRole('DOCTOR');
+    this.isAdmin = this.authService.hasRole('ADMIN');
+    this.isPatient = this.authService.hasRole('PATIENT');
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.loadAppointment(+id);
     }
-    loadAppointment(id: number) {
-        this.appointmentService.getAppointment(id).subscribe({
-            next: (data: Appointment) => {
-                this.appointment = data;
-                this.loading = false;
-            },
-            error: (err: any) => {
-                console.error('Error loading appointment:', err);
-                this.loading = false;
-                this.router.navigate(['/appointments']);
-            }
-        });
-    }
-    goBack() {
+  }
+  loadAppointment(id: number) {
+    this.appointmentService.getAppointment(id).subscribe({
+      next: (data: Appointment) => {
+        this.appointment = data;
+        this.loading = false;
+      },
+      error: (err: any) => {
+        console.error('Error loading appointment:', err);
+        this.loading = false;
         this.router.navigate(['/appointments']);
+      }
+    });
+  }
+  goBack() {
+    this.router.navigate(['/appointments']);
+  }
+  editAppointment() {
+    if (this.appointment?.id) {
+      this.router.navigate(['/edit', this.appointment.id]);
     }
-    editAppointment() {
-        if (this.appointment?.id) {
-            this.router.navigate(['/edit', this.appointment.id]);
-        }
-    }
-    printAppointment() {
-        if (!this.appointment) return;
-        const printWindow = window.open('', '', 'width=800,height=600');
-        printWindow?.document.write(`
+  }
+  printAppointment() {
+    if (!this.appointment) return;
+    const printWindow = window.open('', '', 'width=800,height=600');
+    printWindow?.document.write(`
       <html>
         <head>
           <title>Appointment Details</title>
@@ -77,7 +77,7 @@ export class AppointmentDetailsComponent implements OnInit {
         </head>
         <body>
           <div class="header">
-            <h1>Nagorik Sheba Healthcare</h1>
+            <h1>BD Healthcare</h1>
             <h2>Appointment Details</h2>
             <p>Appointment ID: #${this.appointment.id}</p>
           </div>
@@ -125,6 +125,6 @@ export class AppointmentDetailsComponent implements OnInit {
         </body>
       </html>
     `);
-        printWindow?.document.close();
-    }
+    printWindow?.document.close();
+  }
 }
