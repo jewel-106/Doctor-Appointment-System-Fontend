@@ -7,6 +7,8 @@ import { HospitalService, Hospital } from '../../services/hospital.service';
 import { AppointmentService } from '../../services/appointment.service';
 import { AuthService } from '../../services/auth.service';
 import { Appointment } from '../../models/appointment.model';
+import { AppComponent } from '../../app';
+
 @Component({
     selector: 'app-book-appointment',
     standalone: true,
@@ -21,6 +23,8 @@ export class BookAppointmentComponent implements OnInit {
     private authService = inject(AuthService);
     private router = inject(Router);
     private fb = inject(FormBuilder);
+    private app = inject(AppComponent);
+
     currentStep = 1;
     divisions: Division[] = [];
     districts: District[] = [];
@@ -33,6 +37,7 @@ export class BookAppointmentComponent implements OnInit {
     selectedHospital: Hospital | null = null;
     selectedDoctor: any | null = null;
     availableSlots: any[] = [];
+
     form = this.fb.group({
         patientName: ['', [Validators.required, Validators.minLength(2)]],
         patientEmail: ['', [Validators.required, Validators.email]],
@@ -44,9 +49,11 @@ export class BookAppointmentComponent implements OnInit {
         reason: ['']
     });
     loading = false;
+
     get today(): string {
         return new Date().toISOString().split('T')[0];
     }
+
     ngOnInit() {
         this.loadDivisions();
         this.loadSavedPreference();
@@ -65,9 +72,11 @@ export class BookAppointmentComponent implements OnInit {
             }
         });
     }
+
     loadDivisions() {
         this.locationService.getDivisions().subscribe(data => this.divisions = data);
     }
+
     onDivisionChange() {
         this.selectedDistrictId = null;
         this.selectedUpazilaId = null;
@@ -78,6 +87,7 @@ export class BookAppointmentComponent implements OnInit {
         }
         this.savePreference();
     }
+
     onDistrictChange() {
         this.selectedUpazilaId = null;
         this.upazilas = [];
@@ -86,9 +96,11 @@ export class BookAppointmentComponent implements OnInit {
         }
         this.savePreference();
     }
+
     onUpazilaChange() {
         this.savePreference();
     }
+
     searchHospitals() {
         if (!this.selectedDivisionId) return;
         this.loading = true;
@@ -102,13 +114,18 @@ export class BookAppointmentComponent implements OnInit {
                 this.currentStep = 2;
                 this.loading = false;
             },
-            error: () => this.loading = false
+            error: () => {
+                this.loading = false;
+                this.app.showToast('Failed to load hospitals', 'error');
+            }
         });
     }
+
     selectHospital(hospital: Hospital) {
         this.selectedHospital = hospital;
         this.loadDoctors(hospital.id);
     }
+
     loadDoctors(hospitalId: number) {
         this.loading = true;
         this.appointmentService.getDoctors().subscribe({
@@ -117,9 +134,13 @@ export class BookAppointmentComponent implements OnInit {
                 this.currentStep = 3;
                 this.loading = false;
             },
-            error: () => this.loading = false
+            error: () => {
+                this.loading = false;
+                this.app.showToast('Failed to load doctors', 'error');
+            }
         });
     }
+
     loadSlots(date: string) {
         if (!this.selectedDoctor) return;
         this.loading = true;
@@ -131,13 +152,16 @@ export class BookAppointmentComponent implements OnInit {
             error: () => {
                 this.loading = false;
                 this.availableSlots = [];
+                this.app.showToast('Failed to load slots', 'error');
             }
         });
     }
+
     selectDoctor(doctor: any) {
         this.selectedDoctor = doctor;
         this.currentStep = 4;
     }
+
     submit() {
         if (this.form.invalid) return;
         this.loading = true;
@@ -155,13 +179,15 @@ export class BookAppointmentComponent implements OnInit {
             reason: raw.reason || undefined,
             hospitalId: this.selectedHospital?.id
         };
+
         this.appointmentService.createAppointment(appointment).subscribe({
             next: () => {
-                alert('Appointment booked successfully!');
+                this.app.showToast('Appointment booked successfully!', 'success');
                 this.router.navigate(['/appointments']);
             },
             error: (err) => {
-                alert('Error booking appointment: ' + (err.error?.error || 'Unknown error'));
+                const msg = err.error?.error || 'Unknown error occurred';
+                this.app.showToast('Error booking appointment: ' + msg, 'error');
                 this.loading = false;
             }
         });

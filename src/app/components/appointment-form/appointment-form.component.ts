@@ -5,6 +5,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AppointmentService } from '../../services/appointment.service';
 import { Appointment } from '../../models/appointment.model';
 import { AuthService } from '../../services/auth.service';
+import { AppComponent } from '../../app';
+
 @Component({
     selector: 'app-appointment-form',
     standalone: true,
@@ -18,6 +20,8 @@ export class AppointmentFormComponent implements OnInit {
     private router = inject(Router);
     private route = inject(ActivatedRoute);
     private auth = inject(AuthService);
+    private app = inject(AppComponent);
+
     form = this.fb.group({
         patientName: ['', [Validators.required, Validators.minLength(2)]],
         patientEmail: ['', [Validators.required, Validators.email]],
@@ -40,18 +44,21 @@ export class AppointmentFormComponent implements OnInit {
     isAdmin = false;
     isDoctor = false;
     error = '';
+
     get today(): string {
         return new Date().toISOString().split('T')[0];
     }
     get activeDoctors() {
         return this.doctors.filter(d => d.active !== false);
     }
+
     ngOnInit(): void {
         const user = this.auth.getUser();
         this.isPatient = user?.role === 'PATIENT';
         this.isAdmin = user?.role === 'ADMIN';
         this.isDoctor = user?.role === 'DOCTOR';
         this.loadDoctors();
+
         const idParam = this.route.snapshot.paramMap.get('id');
         if (idParam) {
             this.isEdit = true;
@@ -72,6 +79,7 @@ export class AppointmentFormComponent implements OnInit {
                         notes: apt.notes || '',
                         reason: apt.reason || ''
                     });
+
                     if (this.isPatient) {
                         this.form.get('patientEmail')?.disable();
                         this.form.get('status')?.disable();
@@ -92,7 +100,7 @@ export class AppointmentFormComponent implements OnInit {
                     }
                 },
                 error: () => {
-                    alert('Appointment not found');
+                    this.app.showToast('Appointment not found', 'error');
                     this.router.navigate(['/appointments']);
                 }
             });
@@ -109,6 +117,7 @@ export class AppointmentFormComponent implements OnInit {
             }
         }
     }
+
     loadDoctors() {
         this.loading = true;
         this.service.getDoctors().subscribe({
@@ -119,12 +128,15 @@ export class AppointmentFormComponent implements OnInit {
             error: () => {
                 this.error = 'Failed to load doctors';
                 this.loading = false;
+                this.app.showToast('Failed to load doctors list', 'error');
             }
         });
     }
+
     submit(): void {
         if (this.form.invalid || this.loading) return;
         this.loading = true;
+
         const raw = this.form.getRawValue();
         const appointment: Appointment = {
             patientName: raw.patientName!,
@@ -140,25 +152,27 @@ export class AppointmentFormComponent implements OnInit {
             notes: raw.notes || undefined,
             reason: raw.reason || undefined
         };
+
         const action = this.isEdit
             ? this.service.updateAppointment(this.id, appointment)
             : this.service.createAppointment(appointment);
+
         action.subscribe({
             next: () => {
-                alert(this.isEdit ? 'Appointment updated' : 'Appointment created');
+                this.app.showToast(this.isEdit ? 'Appointment updated successfully!' : 'Appointment created successfully!', 'success');
                 this.router.navigate(['/appointments']);
             },
             error: (err) => {
                 console.error('Appointment save error:', err);
-                alert('Error: ' + (err.error?.error || 'Please try again'));
+                const msg = err.error?.error || 'Failed to save appointment. Please try again.';
+                this.app.showToast(msg, 'error');
                 this.loading = false;
             },
             complete: () => this.loading = false
         });
     }
+
     cancel() {
-        if (confirm('Are you sure you want to cancel?')) {
-            this.router.navigate(['/appointments']);
-        }
+        this.router.navigate(['/appointments']);
     }
 }

@@ -2,6 +2,8 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators, FormsModule } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
+import { AppComponent } from '../../../app';
+
 @Component({
   selector: 'app-admin-doctors',
   standalone: true,
@@ -11,10 +13,13 @@ import { AuthService } from '../../../services/auth.service';
 export class AdminDoctors implements OnInit {
   private fb = inject(FormBuilder);
   private auth = inject(AuthService);
+  private app = inject(AppComponent);
+
   doctors: any[] = [];
   showAddDoctor = false;
   loading = false;
   error = '';
+
   doctorForm = this.fb.group({
     name: ['', [Validators.required]],
     email: ['', [Validators.required, Validators.email]],
@@ -24,6 +29,7 @@ export class AdminDoctors implements OnInit {
     consultationFee: [''],
     qualifications: ['']
   });
+
   searchTerm = '';
   page = 1;
   pageSize = 10;
@@ -50,12 +56,15 @@ export class AdminDoctors implements OnInit {
     'Pathologist',
     'Dentist'
   ];
+
   onPageSizeChange() {
     this.page = 1;
   }
+
   ngOnInit() {
     this.loadDoctors();
   }
+
   loadDoctors() {
     this.loading = true;
     this.auth.getDoctors().subscribe({
@@ -64,11 +73,12 @@ export class AdminDoctors implements OnInit {
         this.loading = false;
       },
       error: () => {
-        this.error = 'Failed to load doctors';
+        this.app.showToast('Failed to load doctors', 'error');
         this.loading = false;
       }
     });
   }
+
   get filteredDoctors() {
     return this.doctors.filter(d =>
       d.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
@@ -76,20 +86,25 @@ export class AdminDoctors implements OnInit {
       d.specialty.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
   }
+
   get paginatedDoctors() {
     const start = (this.page - 1) * this.pageSize;
     return this.filteredDoctors.slice(start, start + this.pageSize);
   }
+
   get totalPages() {
     return Array(Math.ceil(this.filteredDoctors.length / this.pageSize)).fill(0).map((x, i) => i + 1);
   }
+
   isEdit = false;
   editingId: number | null = null;
+
   addDoctor() {
     if (this.doctorForm.invalid) return;
     this.loading = true;
     this.error = '';
     const data = this.doctorForm.getRawValue();
+
     if (this.isEdit && this.editingId) {
       const payload = {
         name: data.name!,
@@ -101,12 +116,13 @@ export class AdminDoctors implements OnInit {
       };
       this.auth.updateDoctor(this.editingId, payload).subscribe({
         next: () => {
-          alert('Doctor updated successfully!');
+          this.app.showToast('Doctor updated successfully!', 'success');
           this.resetForm();
           this.loadDoctors();
         },
         error: (err) => {
-          this.error = err.error?.error || 'Failed to update doctor';
+          const msg = err.error?.error || 'Failed to update doctor';
+          this.app.showToast(msg, 'error');
         }
       }).add(() => this.loading = false);
     } else {
@@ -120,16 +136,18 @@ export class AdminDoctors implements OnInit {
       };
       this.auth.addDoctor(payload).subscribe({
         next: () => {
-          alert('Doctor added successfully!');
+          this.app.showToast('Doctor added successfully!', 'success');
           this.resetForm();
           this.loadDoctors();
         },
         error: (err) => {
-          this.error = err.error?.error || 'Failed to add doctor';
+          const msg = err.error?.error || 'Failed to add doctor';
+          this.app.showToast(msg, 'error');
         }
       }).add(() => this.loading = false);
     }
   }
+
   editDoctor(doctor: any) {
     this.isEdit = true;
     this.editingId = doctor.id;
@@ -141,11 +159,12 @@ export class AdminDoctors implements OnInit {
       specialty: doctor.specialty,
       consultationFee: doctor.consultationFee || '',
       qualifications: doctor.qualifications || '',
-      password: '' 
+      password: ''
     });
     this.doctorForm.get('password')?.clearValidators();
     this.doctorForm.get('password')?.updateValueAndValidity();
   }
+
   resetForm() {
     this.showAddDoctor = false;
     this.isEdit = false;
@@ -154,24 +173,29 @@ export class AdminDoctors implements OnInit {
     this.doctorForm.get('password')?.setValidators([Validators.required, Validators.minLength(6)]);
     this.doctorForm.get('password')?.updateValueAndValidity();
   }
+
   selectedDoctor: any = null;
   showViewModal: boolean = false;
+
   toggleStatus(doctor: any) {
     const newStatus = !doctor.active;
     this.auth.updateDoctorStatus(doctor.id, newStatus).subscribe({
       next: () => {
         doctor.active = newStatus;
+        this.app.showToast(`Doctor status updated to ${newStatus ? 'Active' : 'Inactive'}`, 'success');
       },
       error: (err) => {
         console.error('Failed to update status', err);
-        alert('Failed to update status');
+        this.app.showToast('Failed to update status', 'error');
       }
     });
   }
+
   viewDoctor(doctor: any) {
     this.selectedDoctor = doctor;
     this.showViewModal = true;
   }
+
   closeViewModal() {
     this.showViewModal = false;
     this.selectedDoctor = null;

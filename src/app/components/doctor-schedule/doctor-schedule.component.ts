@@ -106,8 +106,9 @@ export class DoctorScheduleComponent implements OnInit {
     this.appointmentService.updateAppointmentStatus(id, status).subscribe({
       next: () => {
         this.refresh();
+        this.app.showToast(`Appointment marked as ${status}`, 'success');
       },
-      error: () => alert('Something went wrong! Please try again.')
+      error: () => this.app.showToast('Something went wrong! Please try again.', 'error')
     });
   }
   viewAppointment(id: number) {

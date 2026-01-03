@@ -4,6 +4,8 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angu
 import { HospitalService, Hospital } from '../../../services/hospital.service';
 import { LocationService, Division, District, Upazila } from '../../../services/location.service';
 import { AuthService } from '../../../services/auth.service';
+import { AppComponent } from '../../../app';
+
 @Component({
     selector: 'app-admin-hospitals',
     standalone: true,
@@ -15,6 +17,8 @@ export class AdminHospitalsComponent implements OnInit {
     private locationService = inject(LocationService);
     private authService = inject(AuthService);
     private fb = inject(FormBuilder);
+    private app = inject(AppComponent);
+
     hospitals: Hospital[] = [];
     divisions: Division[] = [];
     districts: District[] = [];
@@ -24,6 +28,7 @@ export class AdminHospitalsComponent implements OnInit {
     loading = false;
     isSingleHospitalMode = false;
     selectedHospital: Hospital | null = null;
+
     form = this.fb.group({
         id: [null as number | null],
         name: ['', Validators.required],
@@ -37,6 +42,7 @@ export class AdminHospitalsComponent implements OnInit {
         isActive: [true],
         logoUrl: ['']
     });
+
     ngOnInit() {
         const user = this.authService.getUser();
         if (user?.role === 'ADMIN' && user.hospitalId) {
@@ -47,6 +53,7 @@ export class AdminHospitalsComponent implements OnInit {
         }
         this.loadDivisions();
     }
+
     loadSingleHospital(id: number) {
         this.loading = true;
         this.hospitalService.getHospital(id).subscribe({
@@ -57,6 +64,7 @@ export class AdminHospitalsComponent implements OnInit {
             error: () => this.loading = false
         });
     }
+
     loadHospitals() {
         this.loading = true;
         this.hospitalService.getAllHospitals().subscribe({
@@ -67,9 +75,11 @@ export class AdminHospitalsComponent implements OnInit {
             error: () => this.loading = false
         });
     }
+
     loadDivisions() {
         this.locationService.getDivisions().subscribe(data => this.divisions = data);
     }
+
     onDivisionChange() {
         const divId = this.form.get('divisionId')?.value;
         this.districts = [];
@@ -79,6 +89,7 @@ export class AdminHospitalsComponent implements OnInit {
             this.locationService.getDistricts(divId).subscribe(data => this.districts = data);
         }
     }
+
     onDistrictChange() {
         const disId = this.form.get('districtId')?.value;
         this.upazilas = [];
@@ -87,16 +98,19 @@ export class AdminHospitalsComponent implements OnInit {
             this.locationService.getUpazilas(disId).subscribe(data => this.upazilas = data);
         }
     }
+
     openAddModal() {
         this.isEdit = false;
         this.showForm = true;
         this.form.reset({ isActive: true });
     }
+
     enableEdit() {
         if (this.selectedHospital) {
             this.editHospital(this.selectedHospital);
         }
     }
+
     editHospital(hospital: Hospital) {
         this.isEdit = true;
         this.showForm = true;
@@ -113,6 +127,7 @@ export class AdminHospitalsComponent implements OnInit {
             isActive: hospital.isActive,
             logoUrl: hospital.logoUrl
         });
+
         if (hospital.division?.id) {
             this.locationService.getDistricts(hospital.division.id).subscribe(data => {
                 this.districts = data;
@@ -122,6 +137,7 @@ export class AdminHospitalsComponent implements OnInit {
             });
         }
     }
+
     submit() {
         if (this.form.invalid) return;
         this.loading = true;
@@ -132,12 +148,14 @@ export class AdminHospitalsComponent implements OnInit {
             district: data.districtId ? { id: data.districtId } : null,
             upazila: data.upazilaId ? { id: data.upazilaId } : null
         };
+
         const req = this.isEdit
             ? this.hospitalService.updateHospital(data.id!, payload)
             : this.hospitalService.createHospital(payload);
+
         req.subscribe({
             next: () => {
-                alert(this.isEdit ? 'Hospital updated' : 'Hospital created');
+                this.app.showToast(this.isEdit ? 'Hospital updated successfully!' : 'Hospital created successfully!', 'success');
                 if (this.isSingleHospitalMode) {
                     this.showForm = false;
                     this.loadSingleHospital(this.selectedHospital!.id);
@@ -147,16 +165,24 @@ export class AdminHospitalsComponent implements OnInit {
                 }
             },
             error: (err) => {
-                alert('Failed to save hospital');
+                this.app.showToast('Failed to save hospital', 'error');
                 this.loading = false;
             }
         });
     }
+
     deleteHospital(id: number) {
-        if (confirm('Are you sure?')) {
-            this.hospitalService.deleteHospital(id).subscribe(() => this.loadHospitals());
+        if (confirm('Are you sure you want to delete this hospital?')) {
+            this.hospitalService.deleteHospital(id).subscribe({
+                next: () => {
+                    this.loadHospitals();
+                    this.app.showToast('Hospital deleted successfully', 'success');
+                },
+                error: () => this.app.showToast('Failed to delete hospital', 'error')
+            });
         }
     }
+
     onFileSelected(event: any) {
         const file = event.target.files[0];
         if (file) {

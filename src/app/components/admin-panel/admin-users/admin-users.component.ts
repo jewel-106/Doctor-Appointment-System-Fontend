@@ -5,6 +5,8 @@ import { AuthService } from '../../../services/auth.service';
 import { HospitalService, Hospital } from '../../../services/hospital.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
+import { AppComponent } from '../../../app';
+
 @Component({
     selector: 'app-admin-users',
     standalone: true,
@@ -17,11 +19,14 @@ export class AdminUsersComponent implements OnInit {
     private hospitalService = inject(HospitalService);
     private fb = inject(FormBuilder);
     private http = inject(HttpClient);
+    private app = inject(AppComponent);
+
     admins: any[] = [];
     hospitals: Hospital[] = [];
     showForm = false;
     loading = false;
     searchTerm = '';
+
     form = this.fb.group({
         name: ['', Validators.required],
         email: ['', [Validators.required, Validators.email]],
@@ -29,18 +34,22 @@ export class AdminUsersComponent implements OnInit {
         phone: ['', Validators.required],
         hospitalId: [null as number | null]
     });
+
     ngOnInit() {
         this.loadAdmins();
         this.loadHospitals();
     }
+
     loadAdmins() {
         this.http.get<any[]>(`${environment.apiUrl}/api/admin/users/admins`).subscribe(data => {
             this.admins = data;
         });
     }
+
     loadHospitals() {
         this.hospitalService.getAllHospitals().subscribe(data => this.hospitals = data);
     }
+
     get filteredAdmins() {
         if (!this.searchTerm) return this.admins;
         return this.admins.filter(a =>
@@ -48,10 +57,12 @@ export class AdminUsersComponent implements OnInit {
             a.email.toLowerCase().includes(this.searchTerm.toLowerCase())
         );
     }
+
     openAddModal() {
         this.showForm = true;
         this.form.reset();
     }
+
     submit() {
         if (this.form.invalid) return;
         this.loading = true;
@@ -61,13 +72,13 @@ export class AdminUsersComponent implements OnInit {
             responseType: 'text'
         }).subscribe({
             next: () => {
-                alert('Admin created successfully');
+                this.app.showToast('Admin created successfully', 'success');
                 this.showForm = false;
                 this.loadAdmins();
                 this.loading = false;
             },
             error: () => {
-                alert('Failed to create admin');
+                this.app.showToast('Failed to create admin', 'error');
                 this.loading = false;
             }
         });
