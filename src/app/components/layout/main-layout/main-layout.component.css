@@ -1,23 +1,16 @@
-/* Layout Variables */
 :root {
     --sidebar-width: 260px;
     --header-height: 70px;
     --sidebar-bg: #ffffff;
     --sidebar-text: #4b5563;
     --sidebar-active-bg: #ecfdf5;
-
     --sidebar-active-text: #059669;
-  
 }
-
-
 .layout-wrapper {
     display: flex;
     min-height: 100vh;
     background-color: var(--bg-body);
 }
-
-
 .sidebar {
     width: var(--sidebar-width);
     background-color: var(--sidebar-bg);
@@ -31,7 +24,6 @@
     z-index: 1040;
     transition: transform 0.3s ease-in-out;
 }
-
 .sidebar-header {
     height: var(--header-height);
     display: flex;
@@ -39,7 +31,6 @@
     padding: 0 1.5rem;
     border-bottom: 1px solid var(--border-color);
 }
-
 .brand-logo {
     font-size: 1.25rem;
     font-weight: 700;
@@ -48,7 +39,6 @@
     align-items: center;
     gap: 0.5rem;
 }
-
 .sidebar-nav {
     flex: 1;
     padding: 1.5rem 1rem;
@@ -57,7 +47,6 @@
     flex-direction: column;
     gap: 0.5rem;
 }
-
 .nav-item {
     display: flex;
     align-items: center;
@@ -69,38 +58,30 @@
     transition: all 0.2s ease;
     text-decoration: none;
     cursor: pointer;
-
     &:hover {
         background-color: var(--bg-body);
         color: var(--text-main);
     }
-
     &.active {
         background-color: var(--sidebar-active-bg);
         color: var(--sidebar-active-text);
     }
-
     i {
         font-size: 1.25rem;
     }
 }
-
 .sidebar-footer {
     padding: 1rem;
     border-top: 1px solid var(--border-color);
 }
-
-
 .main-content {
     flex: 1;
     margin-left: var(--sidebar-width);
     display: flex;
     flex-direction: column;
     min-width: 0;
-   
     transition: margin-left 0.3s ease-in-out;
 }
-
 .top-header {
     height: var(--header-height);
     background-color: var(--bg-surface);
@@ -113,22 +94,18 @@
     top: 0;
     z-index: 1030;
 }
-
 .header-search {
     width: 300px;
     position: relative;
-
     input {
         padding-left: 2.5rem;
         background-color: var(--bg-body);
         border: none;
-
         &:focus {
             background-color: white;
             box-shadow: 0 0 0 2px var(--primary-light);
         }
     }
-
     i {
         position: absolute;
         left: 1rem;
@@ -137,13 +114,11 @@
         color: var(--text-secondary);
     }
 }
-
 .header-actions {
     display: flex;
     align-items: center;
     gap: 1.5rem;
 }
-
 .action-btn {
     background: none;
     border: none;
@@ -152,12 +127,10 @@
     padding: 0.5rem;
     border-radius: 50%;
     transition: background 0.2s;
-
     &:hover {
         background-color: var(--bg-body);
         color: var(--primary-color);
     }
-
     .badge-dot {
         position: absolute;
         top: 4px;
@@ -169,17 +142,13 @@
         border: 1px solid white;
     }
 }
-
-
 @media (max-width: 992px) {
     .sidebar {
         transform: translateX(-100%);
     }
-
     .main-content {
         margin-left: 0;
     }
-
     .sidebar.show {
         transform: translateX(0);
     }

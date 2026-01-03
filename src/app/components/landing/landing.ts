@@ -1,7 +1,6 @@
 import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-
 @Component({
   selector: 'app-landing',
   standalone: true,
@@ -11,7 +10,6 @@ import { RouterModule } from '@angular/router';
 })
 export class LandingComponent {
   isScrolled = false;
-
   @HostListener('window:scroll', [])
   onWindowScroll() {
     this.isScrolled = window.scrollY > 50;

@@ -1,38 +1,29 @@
-/* Patient Dashboard Styles */
 .text-xs {
     font-size: 0.7rem;
     letter-spacing: 0.5px;
 }
-
 .text-gray-300 {
     color: #dddfeb;
 }
-
 .text-gray-800 {
     color: #5a5c69;
 }
-
 .card {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-
 .hover-lift:hover {
     transform: translateY(-8px);
     box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2) !important;
 }
-
 .card:hover {
     transform: translateY(-3px);
     box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.15) !important;
 }
-
-
 .border-primary.hover-lift {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     border: none !important;
 }
-
 .border-primary.hover-lift .text-primary,
 .border-primary.hover-lift .text-gray-800,
 .border-primary.hover-lift .text-muted,
@@ -40,13 +31,11 @@
     color: white !important;
     opacity: 1;
 }
-
 .border-success.hover-lift {
     background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
     color: white;
     border: none !important;
 }
-
 .border-success.hover-lift .text-success,
 .border-success.hover-lift .text-gray-800,
 .border-success.hover-lift .text-muted,
@@ -54,13 +43,11 @@
     color: white !important;
     opacity: 1;
 }
-
 .border-info.hover-lift {
     background: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%);
     color: white;
     border: none !important;
 }
-
 .border-info.hover-lift .text-info,
 .border-info.hover-lift .text-gray-800,
 .border-info.hover-lift .text-muted,
@@ -68,13 +55,11 @@
     color: white !important;
     opacity: 1;
 }
-
 .border-warning.hover-lift {
     background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
     color: white;
     border: none !important;
 }
-
 .border-warning.hover-lift .text-warning,
 .border-warning.hover-lift .text-gray-800,
 .border-warning.hover-lift .text-muted,
@@ -82,29 +67,24 @@
     color: white !important;
     opacity: 1;
 }
-
 .table-hover tbody tr:hover {
     background-color: rgba(102, 126, 234, 0.08);
     transform: scale(1.01);
     transition: all 0.2s ease;
 }
-
 .btn-group-sm .btn {
     font-size: 0.75rem;
     padding: 0.25rem 0.5rem;
 }
-
 .btn-primary {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     border: none;
     transition: all 0.3s ease;
 }
-
 .btn-primary:hover {
     transform: translateY(-2px);
     box-shadow: 0 0.5rem 1rem rgba(102, 126, 234, 0.4);
 }
-
 .btn-outline-primary:hover {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     border-color: transparent;

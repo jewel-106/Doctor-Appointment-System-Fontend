@@ -1,10 +1,8 @@
-// src/app/components/profile/profile.component.ts
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { AppComponent } from '../../app';
-
 @Component({
   selector: 'app-profile',
   standalone: true,
@@ -15,11 +13,8 @@ import { AppComponent } from '../../app';
 export class ProfileComponent implements OnInit {
   private auth = inject(AuthService);
   private app = inject(AppComponent);
-
   user: any = null;
   previewAvatar = 'https://via.placeholder.com/150';
-
-
   showEdit = false;
   editForm = {
     name: '',
@@ -31,27 +26,18 @@ export class ProfileComponent implements OnInit {
     dateOfBirth: '',
     specialty: ''
   };
-
-
   showPass = false;
   passForm = { current: '', new: '', confirm: '' };
-
-
   loading = false;
-
   ngOnInit() {
     this.loadUserData();
   }
-
   loadUserData() {
     this.user = this.auth.getUser();
-
-
     if (this.user && !this.user.hasOwnProperty('address')) {
       console.log('Old user data structure detected, please logout and login again');
       this.app.showToast('Please logout and login again to see updated profile', 'error');
     }
-
     this.previewAvatar = this.user?.avatar || 'https://via.placeholder.com/150';
     this.editForm = {
       name: this.user?.name || '',
@@ -64,17 +50,13 @@ export class ProfileComponent implements OnInit {
       specialty: this.user?.specialty || ''
     };
   }
-
-
   onAvatarChange(event: any) {
     const file = event.target.files[0];
     if (!file) return;
-
     const reader = new FileReader();
     reader.onload = () => {
       const base64 = reader.result as string;
       this.previewAvatar = base64;
-
       this.auth.updateAvatar(base64).subscribe({
         next: () => {
           this.auth.updateLocalUser({ avatar: base64 });
@@ -86,24 +68,19 @@ export class ProfileComponent implements OnInit {
     };
     reader.readAsDataURL(file);
   }
-
-
   onDrop(e: DragEvent) {
     e.preventDefault();
     const file = e.dataTransfer?.files[0];
     if (file) this.handleFile(file);
   }
-
   onDragOver(e: DragEvent) {
     e.preventDefault();
   }
-
   handleFile(file: File) {
     const reader = new FileReader();
     reader.onload = () => {
       const base64 = reader.result as string;
       this.previewAvatar = base64;
-
       this.auth.updateAvatar(base64).subscribe({
         next: () => {
           this.auth.updateLocalUser({ avatar: base64 });
@@ -115,13 +92,11 @@ export class ProfileComponent implements OnInit {
     };
     reader.readAsDataURL(file);
   }
-
   saveProfile() {
     if (!this.editForm.name || !this.editForm.email) {
       this.app.showToast('Name and Email are required', 'error');
       return;
     }
-
     this.loading = true;
     this.auth.updateProfile(this.editForm).subscribe({
       next: () => {
@@ -136,8 +111,6 @@ export class ProfileComponent implements OnInit {
       }
     });
   }
-
-
   changePassword() {
     if (this.passForm.new !== this.passForm.confirm) {
       this.app.showToast('New passwords do not match', 'error');
@@ -147,7 +120,6 @@ export class ProfileComponent implements OnInit {
       this.app.showToast('Password must be at least 6 characters', 'error');
       return;
     }
-
     this.loading = true;
     this.auth.changePassword(this.passForm.current.trim(), this.passForm.new.trim()).subscribe({
       next: () => {

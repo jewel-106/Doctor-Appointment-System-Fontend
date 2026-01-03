@@ -10,42 +10,33 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { ForgotPasswordComponent } from './auth/forgot-password/forgot-password.component';
 import { VerifyOtpComponent } from './auth/verify-otp/verify-otp.component';
 import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
-
 import { authGuard } from './guards/auth.guard';
 import { roleGuard } from './guards/role.guard';
 import { inject } from '@angular/core';
 import { AuthService } from './services/auth.service';
 import { Router } from '@angular/router';
 import { LandingComponent } from './components/landing/landing';
-
 export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    canActivate: [() => {
+    redirectTo: () => {
       const auth = inject(AuthService);
-      const router = inject(Router);
       if (auth.isLoggedIn()) {
         const user = auth.getUser();
-        if (user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN') {
-          return router.parseUrl('/admin/dashboard');
-        } else if (user?.role === 'DOCTOR') {
-          return router.parseUrl('/doctor/dashboard');
-        } else if (user?.role === 'PATIENT') {
-          return router.parseUrl('/patient/dashboard');
-        }
-        return router.parseUrl('/appointments');
+        if (user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN') return '/admin/dashboard';
+        if (user?.role === 'DOCTOR') return '/doctor/dashboard';
+        if (user?.role === 'PATIENT') return '/patient/dashboard';
+        return '/appointments';
       }
-      return router.parseUrl('/login');
-    }]
+      return '/login';
+    }
   },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'verify-otp', component: VerifyOtpComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
-
   {
     path: '',
     canActivate: [authGuard],
@@ -90,6 +81,5 @@ export const routes: Routes = [
       { path: '', redirectTo: 'appointments', pathMatch: 'full' }
     ]
   },
-
   { path: '**', redirectTo: '' }
 ];

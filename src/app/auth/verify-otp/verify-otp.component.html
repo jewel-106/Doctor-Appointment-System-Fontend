@@ -1,0 +1,36 @@
+<div class="min-vh-100 bg-light d-flex align-items-center justify-content-center py-5 px-3">
+    <div class="card shadow-lg border-0 rounded-4 overflow-hidden" style="max-width: 480px; width: 100%;">
+        <div class="card-header bg-success text-white text-center py-4 border-0">
+            <i class="bi bi-shield-check display-4"></i>
+            <h4 class="fw-bold mt-2 mb-0">Verify Your Identity</h4>
+        </div>
+        <div class="card-body p-5 text-center">
+            <p class="text-muted mb-4">
+                We've sent a 6-digit verification code to<br>
+                <strong class="text-dark">{{ email || 'your email' }}</strong>
+            </p>
+            <div class="d-flex justify-content-center gap-2 mb-4">
+                <input *ngFor="let digit of otp; let i = index; trackBy: trackByIndex" #otpInput type="text"
+                    inputmode="numeric" maxlength="1" class="form-control text-center fs-2 fw-bold otp-input"
+                    [value]="digit" (input)="onInput(i, $event)" (keydown)="onKeyDown(i, $event)"
+                    (paste)="onPaste($event)" [class.filled]="digit" autocomplete="one-time-code">
+            </div>
+            <button class="btn btn-success btn-lg w-100 rounded-pill shadow-sm fw-bold mb-4 transition-all"
+                (click)="verify()" [disabled]="!isOtpComplete || loading">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+                {{ loading ? 'Verifying...' : 'Verify & Proceed' }}
+            </button>
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <button
+                    class="btn btn-link text-decoration-none text-secondary p-0 d-flex align-items-center hover-link"
+                    (click)="resend()" [disabled]="loading">
+                    <i class="bi bi-arrow-clockwise me-1"></i> Resend Code
+                </button>
+                <a routerLink="/login"
+                    class="text-decoration-none text-secondary fw-semibold d-flex align-items-center hover-link">
+                    <i class="bi bi-arrow-left me-1"></i> Back to Login
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

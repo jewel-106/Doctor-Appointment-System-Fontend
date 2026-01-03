@@ -1,5 +1,4 @@
 <div class="container-fluid py-4" *ngIf="!loading && appointment">
-
     <div class="row mb-4">
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center">
@@ -23,11 +22,8 @@
             </div>
         </div>
     </div>
-
     <div class="row g-4">
-        
         <div class="col-lg-8">
-            
             <div class="card shadow-sm border-0 mb-4">
                 <div class="card-header bg-gradient-primary text-white">
                     <h5 class="mb-0"><i class="bi bi-person-fill me-2"></i>Patient Information</h5>
@@ -73,8 +69,6 @@
                     </div>
                 </div>
             </div>
-
-           
             <div class="card shadow-sm border-0 mb-4">
                 <div class="card-header bg-gradient-success text-white">
                     <h5 class="mb-0"><i class="bi bi-calendar-check me-2"></i>Appointment Information</h5>
@@ -108,8 +102,6 @@
                     </div>
                 </div>
             </div>
-
-            
             <div class="card shadow-sm border-0 mb-4"
                 *ngIf="appointment.reason || appointment.previousPrescription || appointment.patientComment">
                 <div class="card-header bg-gradient-info text-white">
@@ -138,8 +130,6 @@
                     </div>
                 </div>
             </div>
-
-          
             <div class="card shadow-sm border-0"
                 *ngIf="appointment.notes || appointment.diagnosis || appointment.prescription">
                 <div class="card-header bg-gradient-warning text-dark">
@@ -169,10 +159,7 @@
                 </div>
             </div>
         </div>
-
-        
         <div class="col-lg-4">
-           
             <div class="card shadow-sm border-0 mb-4">
                 <div class="card-body text-center py-4">
                     <div class="mb-3">
@@ -192,8 +179,6 @@
           }">{{ appointment.status | uppercase }}</span>
                 </div>
             </div>
-
-           
             <div class="card shadow-sm border-0 mb-4">
                 <div class="card-header bg-light">
                     <h6 class="mb-0 fw-bold">Quick Actions</h6>
@@ -212,8 +197,6 @@
                     </div>
                 </div>
             </div>
-
-           
             <div class="card shadow-sm border-0">
                 <div class="card-header bg-light">
                     <h6 class="mb-0 fw-bold">Appointment Timeline</h6>
@@ -243,7 +226,6 @@
         </div>
     </div>
 </div>
-
 <div class="container-fluid py-5" *ngIf="loading">
     <div class="text-center">
         <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div>

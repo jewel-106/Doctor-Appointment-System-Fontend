@@ -5,7 +5,6 @@ import { AuthService } from '../../../services/auth.service';
 import { HospitalService, Hospital } from '../../../services/hospital.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
-
 @Component({
     selector: 'app-admin-users',
     standalone: true,
@@ -18,14 +17,11 @@ export class AdminUsersComponent implements OnInit {
     private hospitalService = inject(HospitalService);
     private fb = inject(FormBuilder);
     private http = inject(HttpClient);
-
     admins: any[] = [];
     hospitals: Hospital[] = [];
-
     showForm = false;
     loading = false;
     searchTerm = '';
-
     form = this.fb.group({
         name: ['', Validators.required],
         email: ['', [Validators.required, Validators.email]],
@@ -33,22 +29,18 @@ export class AdminUsersComponent implements OnInit {
         phone: ['', Validators.required],
         hospitalId: [null as number | null]
     });
-
     ngOnInit() {
         this.loadAdmins();
         this.loadHospitals();
     }
-
     loadAdmins() {
         this.http.get<any[]>(`${environment.apiUrl}/api/admin/users/admins`).subscribe(data => {
             this.admins = data;
         });
     }
-
     loadHospitals() {
         this.hospitalService.getAllHospitals().subscribe(data => this.hospitals = data);
     }
-
     get filteredAdmins() {
         if (!this.searchTerm) return this.admins;
         return this.admins.filter(a =>
@@ -56,18 +48,14 @@ export class AdminUsersComponent implements OnInit {
             a.email.toLowerCase().includes(this.searchTerm.toLowerCase())
         );
     }
-
     openAddModal() {
         this.showForm = true;
         this.form.reset();
     }
-
     submit() {
         if (this.form.invalid) return;
-
         this.loading = true;
         const data = this.form.value;
-
         this.http.post(`${environment.apiUrl}/api/admin/create-admin`, data, {
             params: { hospitalId: data.hospitalId || '' },
             responseType: 'text'

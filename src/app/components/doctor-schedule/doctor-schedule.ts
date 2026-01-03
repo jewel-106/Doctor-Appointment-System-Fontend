@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-
 @Component({
   selector: 'app-doctor-schedule',
   imports: [],
@@ -7,5 +6,4 @@ import { Component } from '@angular/core';
   styleUrl: './doctor-schedule.scss',
 })
 export class DoctorSchedule {
-
 }

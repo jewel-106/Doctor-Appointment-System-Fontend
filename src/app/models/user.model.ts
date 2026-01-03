@@ -1,4 +1,3 @@
-// src/app/models/user.model.ts
 export interface User {
   id?: number;
   name: string;
@@ -16,12 +15,10 @@ export interface User {
     name: string;
   };
 }
-
 export interface LoginRequest {
   email: string;
   password: string;
 }
-
 export interface RegisterRequest {
   name: string;
   email: string;
@@ -30,7 +27,6 @@ export interface RegisterRequest {
   phone: string;
   specialty?: string;
 }
-
 export interface AuthResponse {
   token: string;
   name: string;

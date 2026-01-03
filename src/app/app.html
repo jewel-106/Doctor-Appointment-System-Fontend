@@ -1,40 +1,208 @@
-<!-- src/app/app.component.html -->
-
-<div class="position-fixed top-0 end-0 p-3" style="z-index: 1080;">
-    <div class="dropdown">
-        <button class="btn btn-primary rounded-pill shadow-sm d-flex align-items-center gap-2 px-3 py-2"
-            data-bs-toggle="dropdown" type="button">
-            <img [src]="(auth.currentUser?.avatar) || 'https://via.placeholder.com/40'" class="rounded-circle"
-                width="36" height="36" alt="User">
-            <span class="fw-semibold d-none d-sm-inline">
-                {{ auth.currentUser?.name || 'User' }}
-            </span>
-            <i class="bi bi-chevron-down"></i>
-        </button>
-
-        <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 mt-2">
-            <li>
-                <a class="dropdown-item fw-medium" routerLink="/profile">
-                    <i class="bi bi-person-circle me-2"></i> My Profile
-                </a>
-            </li>
-            <li>
-                <a class="dropdown-item fw-medium" routerLink="/appointments">
-                    <i class="bi bi-calendar-check me-2"></i> My Appointments
-                </a>
-            </li>
-            <li>
-                <hr class="dropdown-divider">
-            </li>
-            <li>
-                <button class="dropdown-item text-danger fw-medium" (click)="auth.logout()">
-                    <i class="bi bi-box-arrow-right me-2"></i> Logout
-                </button>
-            </li>
-        </ul>
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1100;">
+    <div *ngFor="let toast of toastService.toasts()" class="toast show align-items-center text-white border-0 shadow-lg"
+        [class.bg-success]="toast.type==='success'" [class.bg-danger]="toast.type==='error'"
+        [class.bg-info]="toast.type==='info'" role="alert">
+        <div class="d-flex">
+            <div class="toast-body fw-medium">
+                <i class="bi me-2" [class.bi-check-circle-fill]="toast.type==='success'"
+                    [class.bi-x-circle-fill]="toast.type==='error'"
+                    [class.bi-info-circle-fill]="toast.type==='info'"></i>
+                {{ toast.message }}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                (click)="toastService.remove(toast.id)"></button>
+        </div>
     </div>
 </div>
+<div *ngIf="auth.isLoggedIn() && !isAuthPage()" class="app-layout" [class.sidebar-collapsed]="sidebarCollapsed()">
+    <aside class="app-sidebar bg-white border-end">
+        <div class="sidebar-header border-bottom d-flex align-items-center justify-content-center">
+            <div
+                class="brand-logo bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm">
+                BD
+            </div>
+            <div class="brand-text ms-3 fw-bold text-primary">
+                Healthcare
+            </div>
+        </div>
+        <nav class="sidebar-nav flex-grow-1 overflow-auto py-4 px-3">
+            <ul class="nav flex-column gap-2">
+                <li class="nav-item" *ngIf="auth.hasRole('PATIENT')">
+                    <a routerLink="/patient/dashboard" routerLinkActive="active"
+                        class="nav-link d-flex align-items-center" title="Dashboard">
+                        <i class="bi bi-speedometer2 fs-5"></i>
+                        <span class="ms-3">Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item" *ngIf="auth.hasRole('PATIENT')">
+                    <a routerLink="/appointments" routerLinkActive="active" class="nav-link d-flex align-items-center"
+                        title="Appointments">
+                        <i class="bi bi-calendar-check-fill fs-5"></i>
+                        <span class="ms-3">Appointments</span>
+                    </a>
+                </li>
+                <li class="nav-item" *ngIf="auth.hasRole('PATIENT')">
+                    <a routerLink="/new" routerLinkActive="active" class="nav-link d-flex align-items-center"
+                        title="New Appointment">
+                        <i class="bi bi-plus-circle-fill fs-5"></i>
+                        <span class="ms-3">New Appointment</span>
+                    </a>
+                </li>
+                <ng-container *ngIf="auth.hasRole('DOCTOR')">
+                    <li class="nav-item">
+                        <div class="text-muted small fw-bold px-3 mt-3 mb-1 text-uppercase" style="font-size: 0.75rem;">
+                            Doctor</div>
+                    </li>
+                    <li class="nav-item">
+                        <a routerLink="/doctor/dashboard" routerLinkActive="active"
+                            class="nav-link d-flex align-items-center" title="Dashboard">
+                            <i class="bi bi-speedometer2 fs-5"></i>
+                            <span class="ms-3">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a routerLink="/appointments" routerLinkActive="active"
+                            class="nav-link d-flex align-items-center" title="Appointments">
+                            <i class="bi bi-calendar-check-fill fs-5"></i>
+                            <span class="ms-3">Appointments</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a routerLink="/schedule" routerLinkActive="active" class="nav-link d-flex align-items-center"
+                            title="My Schedule">
+                            <i class="bi bi-clock-history fs-5"></i>
+                            <span class="ms-3">My Schedule</span>
+                        </a>
+                    </li>
+                </ng-container>
+                <ng-container *ngIf="auth.hasRole('ADMIN') || auth.hasRole('SUPER_ADMIN')">
+                    <li class="nav-item">
+                        <div class="text-muted small fw-bold px-3 mt-3 mb-1 text-uppercase" style="font-size: 0.75rem;">
+                            Admin</div>
+                    </li>
+                    <li class="nav-item">
+                        <a routerLink="/admin/dashboard" routerLinkActive="active"
+                            class="nav-link d-flex align-items-center" title="Dashboard">
+                            <i class="bi bi-speedometer2 fs-5"></i>
+                            <span class="ms-3">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a routerLink="/admin/doctors" routerLinkActive="active"
+                            class="nav-link d-flex align-items-center" title="Doctors">
+                            <i class="bi bi-person-badge fs-5"></i>
+                            <span class="ms-3">Doctors</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a routerLink="/admin/appointments" routerLinkActive="active"
+                            class="nav-link d-flex align-items-center" title="Appointment List">
+                            <i class="bi bi-calendar-week fs-5"></i>
+                            <span class="ms-3">Appointment List</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a routerLink="/admin/financial" routerLinkActive="active"
+                            class="nav-link d-flex align-items-center" title="Financials">
+                            <i class="bi bi-cash-coin fs-5"></i>
+                            <span class="ms-3">Financials</span>
+                        </a>
+                    </li>
+                </ng-container>
+                <ng-container *ngIf="auth.hasRole('SUPER_ADMIN')">
+                    <li class="nav-item">
+                        <div class="text-muted small fw-bold px-3 mt-3 mb-1 text-uppercase" style="font-size: 0.75rem;">
+                            System</div>
+                    </li>
+                    <li class="nav-item">
+                        <a routerLink="/admin/hospitals" routerLinkActive="active"
+                            class="nav-link d-flex align-items-center" title="Hospitals">
+                            <i class="bi bi-hospital fs-5"></i>
+                            <span class="ms-3">Hospitals</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a routerLink="/admin/users" routerLinkActive="active"
+                            class="nav-link d-flex align-items-center" title="Admins & Users">
+                            <i class="bi bi-people-fill fs-5"></i>
+                            <span class="ms-3">Admins & Users</span>
+                        </a>
+                    </li>
+                </ng-container>
+                <li class="nav-item mt-auto pt-4 border-top">
+                    <a routerLink="/profile" routerLinkActive="active" class="nav-link d-flex align-items-center"
+                        title="My Profile">
+                        <i class="bi bi-person-circle fs-5"></i>
+                        <span class="ms-3">My Profile</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+    <div class="app-main bg-light">
+        <header class="app-header bg-white border-bottom px-4 py-3 d-flex align-items-center shadow-sm">
+            <button class="btn btn-light border-0 rounded-circle p-2 me-3 text-primary" (click)="toggleSidebar()">
+                <i class="bi fs-4" [class.bi-list]="sidebarCollapsed()"
+                    [class.bi-text-indent-right]="!sidebarCollapsed()"></i>
+            </button>
+            <div class="d-none d-lg-block ms-2">
+                <h5 class="m-0 fw-bold text-primary">CarePulse Health Hub</h5>
+                <small class="text-muted" style="font-size: 0.75rem;">Your personal healthcare companion</small>
+            </div>
+            <div class="ms-auto d-flex align-items-center gap-4">
 
-<div class="min-vh-100">
+                <div class="dropdown">
+                    <button
+                        class="btn btn-light border rounded-pill py-1 px-2 d-flex align-items-center gap-2 shadow-sm"
+                        type="button" data-bs-toggle="dropdown">
+                        <img [src]="auth.getUser()?.avatar || 'https://via.placeholder.com/40'"
+                            class="rounded-circle border" width="32" height="32" alt="User">
+                        <div class="text-start d-none d-sm-block lh-1 me-1">
+                            <div class="fw-bold small text-dark">{{ auth.getUser()?.name }}</div>
+                            <div class="text-muted" style="font-size: 0.75rem;">{{ auth.getUser()?.role }}</div>
+                        </div>
+                        <i class="bi bi-chevron-down small text-muted"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 mt-2 p-2 rounded-3">
+                        <li>
+                            <div class="d-flex align-items-center p-3 border-bottom mb-2">
+                                <img [src]="auth.getUser()?.avatar || 'https://via.placeholder.com/60'"
+                                    class="rounded-circle me-3" width="48" height="48">
+                                <div>
+                                    <div class="fw-bold text-dark">{{ auth.getUser()?.name }}</div>
+                                    <div class="text-muted small">{{ auth.getUser()?.email }}</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li><a class="dropdown-item rounded-2 py-2" routerLink="/profile"><i
+                                    class="bi bi-person me-2"></i> Profile</a></li>
+                        <li><a class="dropdown-item rounded-2 py-2" href="#"><i class="bi bi-gear me-2"></i>
+                                Settings</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><button class="dropdown-item rounded-2 py-2 text-danger" (click)="logout()"><i
+                                    class="bi bi-box-arrow-right me-2"></i> Logout</button></li>
+                    </ul>
+                </div>
+            </div>
+        </header>
+        <main class="p-4">
+            <router-outlet></router-outlet>
+        </main>
+        <footer class="bg-white border-top py-3 px-4 text-center text-muted small">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-md-start">
+                    &copy; {{ currentYear }} <strong>Online Sheba Healthcare</strong>. All rights reserved.
+                </div>
+                <div class="col-md-6 text-md-end">
+                    Powered by <span class="text-primary fw-bold">ME</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <div class="sidebar-overlay" [class.show]="!sidebarCollapsed() && isMobile" (click)="toggleSidebar()"></div>
+</div>
+<div *ngIf="!auth.isLoggedIn() || isAuthPage()" class="auth-layout min-vh-100 bg-light p-0">
     <router-outlet></router-outlet>
 </div>

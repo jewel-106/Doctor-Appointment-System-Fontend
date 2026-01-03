@@ -1,35 +1,23 @@
 <div class="register-container">
-
-
   <div class="bg-gradient"></div>
   <div class="bg-pattern"></div>
-
-
   <div class="register-card">
-
-
     <div class="brand-header">
       <div class="logo-circle">
         <i class="bi bi-heart-pulse-fill"></i>
       </div>
-      <h1 class="brand-name">Join BD Healthcare</h1>
-      <p class="brand-tagline">Create your account to get started</p>
+      <h1 class="brand-name">Join Our Care Community</h1>
+      <p class="brand-tagline">Begin your journey towards better health today.</p>
     </div>
-
-
     <form [formGroup]="form" (ngSubmit)="submit()" class="register-form">
-
-
       <div class="form-group">
-        <label for="name" class="form-label">Full Name</label>
+        <label for="name" class="form-label">How should we call you?</label>
         <div class="input-wrapper">
           <i class="bi bi-person input-icon"></i>
           <input type="text" id="name" class="form-input" placeholder="Enter your full name" formControlName="name"
             autocomplete="name">
         </div>
       </div>
-
-
       <div class="form-group">
         <label for="email" class="form-label">Email Address</label>
         <div class="input-wrapper">
@@ -38,7 +26,6 @@
             autocomplete="email">
         </div>
       </div>
-
       <div class="form-group">
         <label for="phone" class="form-label">Phone Number</label>
         <div class="input-wrapper">
@@ -47,8 +34,6 @@
             autocomplete="tel">
         </div>
       </div>
-
-
       <div class="form-group">
         <label for="password" class="form-label">Password</label>
         <div class="input-wrapper">
@@ -60,8 +45,6 @@
           </button>
         </div>
       </div>
-
-
       <div class="form-group">
         <label for="role" class="form-label">Register As</label>
         <div class="role-selector">
@@ -69,20 +52,18 @@
             <input type="radio" name="role" value="PATIENT" formControlName="role" class="role-radio">
             <div class="role-content">
               <i class="bi bi-person-circle"></i>
-              <span>Patient</span>
+              <span>I'm an Individual</span>
             </div>
           </label>
           <label class="role-option" [class.active]="form.get('role')?.value === 'DOCTOR'">
             <input type="radio" name="role" value="DOCTOR" formControlName="role" class="role-radio">
             <div class="role-content">
               <i class="bi bi-heart-pulse"></i>
-              <span>Doctor</span>
+              <span>I'm a Medical Professional</span>
             </div>
           </label>
         </div>
       </div>
-
- 
       <div class="form-group" *ngIf="form.get('role')?.value === 'DOCTOR'">
         <label for="specialty" class="form-label">Medical Specialty</label>
         <div class="input-wrapper">
@@ -91,55 +72,40 @@
             formControlName="specialty">
         </div>
       </div>
-
-    
       <div class="form-group">
         <label class="checkbox-label">
           <input type="checkbox" class="checkbox-input" required>
           <span class="checkbox-text">
-            I agree to the <a href="#" class="link">Terms & Conditions</a> and <a href="#" class="link">Privacy
-              Policy</a>
+            I agree to the <a href="#" class="link">Community Guidelines</a> and <a href="#" class="link">Privacy
+              Promise</a>
           </span>
         </label>
       </div>
-
- 
       <button type="submit" class="submit-btn" [disabled]="loading || form.invalid" [class.loading]="loading">
-        <span *ngIf="!loading">Create Account</span>
+        <span *ngIf="!loading">Start My Journey</span>
         <span *ngIf="loading" class="loading-content">
           <span class="spinner"></span>
-          Creating Account...
+          Preparing your dashboard...
         </span>
       </button>
-
-
       <div class="divider">
         <span>or</span>
       </div>
-
-      
       <div class="login-section">
         <p class="login-text">
           Already have an account?
           <a routerLink="/login" class="login-link">Sign in instead</a>
         </p>
       </div>
-
     </form>
-
-
     <div class="card-footer">
       <a href="#" class="footer-link">Privacy Policy</a>
       <span class="footer-dot">•</span>
       <a href="#" class="footer-link">Terms of Service</a>
     </div>
-
   </div>
-
-
   <a routerLink="/" class="back-home">
     <i class="bi bi-arrow-left"></i>
     Back to Home
   </a>
-
 </div>

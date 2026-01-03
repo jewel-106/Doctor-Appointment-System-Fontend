@@ -8,7 +8,6 @@ import { LocationService } from '../../services/location.service';
 import { Appointment } from '../../models/appointment.model';
 import { AppComponent } from '../../app';
 import { AuthService } from '../../services/auth.service';
-
 @Component({
   selector: 'app-appointment-list',
   standalone: true,
@@ -23,76 +22,66 @@ export class AppointmentListComponent implements OnInit {
   private router = inject(Router);
   private hospitalService = inject(HospitalService);
   private locationService = inject(LocationService);
-
   appointments: Appointment[] = [];
   filtered: Appointment[] = [];
   loading = true;
   search = '';
   statusFilter = 'all';
-
-
   hospitalFilter: number | null = null;
   divisionFilter: number | null = null;
   districtFilter: number | null = null;
   upazilaFilter: number | null = null;
-
- 
   hospitals: any[] = [];
   divisions: any[] = [];
   districts: any[] = [];
   upazilas: any[] = [];
-
   page = 1;
-
-
   isDoctor = false;
   isAdmin = false;
   isSuperAdmin = false;
   isPatient = false;
-
-
+  currentUser: any = null;
   pageSize = 10;
   pageSizeOptions = [10, 25, 50, 100];
-
   ngOnInit(): void {
+    this.currentUser = this.auth.getUser();
     this.isDoctor = this.auth.hasRole('DOCTOR');
     this.isAdmin = this.auth.hasRole('ADMIN') || this.auth.hasRole('SUPER_ADMIN');
     this.isSuperAdmin = this.auth.hasRole('SUPER_ADMIN');
     this.isPatient = this.auth.hasRole('PATIENT');
     this.loadAppointments();
-
     if (this.isSuperAdmin) {
       this.loadFilterData();
     }
   }
-
+  canChangeStatus(apt: Appointment): boolean {
+    if (this.isSuperAdmin) return true;
+    if (this.isDoctor && this.currentUser?.profileId === apt.doctorId) return true;
+    if (this.auth.hasRole('ADMIN') && this.currentUser?.hospitalId === apt.hospitalId) return true;
+    return false;
+  }
   loadFilterData(): void {
     this.hospitalService.getAllHospitals().subscribe(data => this.hospitals = data);
     this.locationService.getDivisions().subscribe(data => this.divisions = data);
   }
-
   onDivisionChange(): void {
     this.districts = [];
     this.upazilas = [];
     this.districtFilter = null;
     this.upazilaFilter = null;
-
     if (this.divisionFilter) {
       this.locationService.getDistricts(this.divisionFilter).subscribe(data => this.districts = data);
     }
     this.filter();
   }
-
   onDistrictChange(): void {
     this.upazilas = [];
     this.upazilaFilter = null;
-
     if (this.districtFilter) {
       this.locationService.getUpazilas(this.districtFilter).subscribe(data => this.upazilas = data);
     }
     this.filter();
   }
-
   loadAppointments(): void {
     this.loading = true;
     this.service.getAppointments().subscribe({
@@ -107,7 +96,6 @@ export class AppointmentListComponent implements OnInit {
       }
     });
   }
-
   applyFilters(): void {
     let temp = this.appointments;
     if (this.search.trim()) {
@@ -124,39 +112,30 @@ export class AppointmentListComponent implements OnInit {
     this.filtered = temp;
     this.page = 1;
   }
-
-  
   filter(): void {
     this.applyFilters();
   }
-
   get paginated(): Appointment[] {
     const start = (this.page - 1) * this.pageSize;
     const end = start + this.pageSize;
     return this.filtered.slice(start, end);
   }
-
   get totalPages(): number[] {
     const total = Math.ceil(this.filtered.length / this.pageSize);
     return Array.from({ length: total }, (_, i) => i + 1);
   }
-
   goToPage(p: number): void { this.page = p; }
   onPageSizeChange(): void { this.page = 1; }
-
-
   viewDetails(id: number): void {
     this.router.navigate(['/view', id]);
   }
-
   edit(id: number): void {
     this.router.navigate(['/edit', id]);
   }
-
-
   delete(id: number): void {
-    if (!this.isAdmin) {
-      this.app.showToast('Only admin can delete appointments', 'error');
+    const apt = this.appointments.find(a => a.id === id);
+    if (!apt || !this.canChangeStatus(apt)) {
+      this.app.showToast('You are not authorized to delete this appointment', 'error');
       return;
     }
     if (confirm('Delete this appointment?')) {
@@ -170,14 +149,12 @@ export class AppointmentListComponent implements OnInit {
       });
     }
   }
-
-
   changeStatus(apt: Appointment, status: 'confirmed' | 'cancelled' | 'complete'): void {
-    if (!(this.isAdmin || this.isDoctor)) {
-      this.app.showToast('You are not authorized to change status', 'error');
+    if (!this.canChangeStatus(apt)) {
+      this.app.showToast('You are not authorized to change status for this appointment', 'error');
       return;
     }
-    this.service.updateAppointment(apt.id!, { ...apt, status }).subscribe({
+    this.service.updateAppointmentStatus(apt.id!, status).subscribe({
       next: () => {
         apt.status = status;
         const msg = status === 'complete' ? 'Completed' : status === 'confirmed' ? 'Confirmed' : 'Cancelled';
@@ -186,7 +163,6 @@ export class AppointmentListComponent implements OnInit {
       error: () => this.app.showToast('Status update failed', 'error')
     });
   }
-
   saveNote(apt: Appointment): void {
     if (!this.isDoctor) {
       this.app.showToast('Only doctors can add advice/notes', 'error');
@@ -197,8 +173,6 @@ export class AppointmentListComponent implements OnInit {
       error: () => this.app.showToast('Failed to save note', 'error')
     });
   }
-
-
   printSlip(apt: Appointment): void {
     const printWindow = window.open('', '', 'width=800,height=600');
     printWindow?.document.write(`

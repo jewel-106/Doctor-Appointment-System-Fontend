@@ -7,10 +7,7 @@ import { Appointment } from '../../models/appointment.model';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration } from 'chart.js';
 import { Chart, registerables } from 'chart.js';
-
-
 Chart.register(...registerables);
-
 @Component({
     selector: 'app-patient-dashboard',
     standalone: true,
@@ -22,20 +19,15 @@ export class PatientDashboardComponent implements OnInit {
     private appointmentService = inject(AppointmentService);
     private authService = inject(AuthService);
     private router = inject(Router);
-
     appointments: Appointment[] = [];
     upcomingAppointments: Appointment[] = [];
     recentAppointments: Appointment[] = [];
-
     totalAppointments = 0;
     upcomingCount = 0;
     completedCount = 0;
     cancelledCount = 0;
     pendingCount = 0;
-
     currentPatient: any = null;
-
-  
     public doughnutChartData: ChartConfiguration<'doughnut'>['data'] = {
         labels: ['Pending', 'Confirmed', 'Complete', 'Cancelled'],
         datasets: [
@@ -47,7 +39,6 @@ export class PatientDashboardComponent implements OnInit {
             }
         ]
     };
-
     public doughnutChartOptions: ChartConfiguration<'doughnut'>['options'] = {
         responsive: true,
         maintainAspectRatio: false,
@@ -55,43 +46,35 @@ export class PatientDashboardComponent implements OnInit {
             legend: { position: 'bottom' }
         }
     };
-
     ngOnInit() {
         this.currentPatient = this.authService.getUser();
         this.loadData();
     }
-
     loadData() {
         this.appointmentService.getAppointments().subscribe(data => {
             const patientEmail = this.currentPatient?.email;
             this.appointments = data.filter(a => a.patientEmail === patientEmail);
-
             this.totalAppointments = this.appointments.length;
             this.completedCount = this.appointments.filter(a => a.status === 'complete').length;
             this.cancelledCount = this.appointments.filter(a => a.status === 'cancelled').length;
             this.pendingCount = this.appointments.filter(a => a.status === 'pending').length;
-
             const today = new Date().toISOString().split('T')[0];
             this.upcomingAppointments = this.appointments
                 .filter(a => a.appointmentDate >= today && a.status !== 'cancelled' && a.status !== 'complete')
                 .sort((a, b) => a.appointmentDate.localeCompare(b.appointmentDate))
                 .slice(0, 5);
             this.upcomingCount = this.upcomingAppointments.length;
-
             this.recentAppointments = this.appointments
                 .sort((a, b) => b.appointmentDate.localeCompare(a.appointmentDate))
                 .slice(0, 5);
-
             this.updateChart();
         });
     }
-
     updateChart() {
         const pending = this.appointments.filter(a => a.status === 'pending').length;
         const confirmed = this.appointments.filter(a => a.status === 'confirmed').length;
         const complete = this.appointments.filter(a => a.status === 'complete').length;
         const cancelled = this.appointments.filter(a => a.status === 'cancelled').length;
-
         this.doughnutChartData = {
             ...this.doughnutChartData,
             datasets: [{
@@ -100,15 +83,12 @@ export class PatientDashboardComponent implements OnInit {
             }]
         };
     }
-
     navigateTo(path: string) {
         this.router.navigate([path]);
     }
-
     viewAppointment(id: number) {
         this.router.navigate(['/view', id]);
     }
-
     printSlip(apt: Appointment) {
         const printWindow = window.open('', '', 'width=800,height=600');
         const html = `

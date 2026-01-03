@@ -1,13 +1,9 @@
-
-// src/app/components/register/register.component.ts
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-
 import { AppComponent } from '../../app';
-
 interface RegisterPayload {
   name: string;
   email: string;
@@ -16,7 +12,6 @@ interface RegisterPayload {
   role: 'PATIENT' | 'DOCTOR' | 'ADMIN'; 
   specialty?: string;
 }
-
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -29,7 +24,6 @@ export class RegisterComponent {
   private auth = inject(AuthService);
   private router = inject(Router);
   private app = inject(AppComponent);
-
   form = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
     email: ['', [Validators.required, Validators.email]],
@@ -38,10 +32,8 @@ export class RegisterComponent {
     role: ['PATIENT' as 'PATIENT' | 'DOCTOR' | 'ADMIN', Validators.required],
     specialty: ['']
   });
-
   loading = false;
   showPassword = false;
-
   ngOnInit() {
     this.form.get('role')?.valueChanges.subscribe(role => {
       const specialtyControl = this.form.get('specialty');
@@ -54,19 +46,14 @@ export class RegisterComponent {
       specialtyControl?.updateValueAndValidity();
     });
   }
-
   submit() {
-
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       this.app.showToast('Please fill in all required fields correctly', 'error');
       return;
     }
-
     this.loading = true;
-
     const raw = this.form.getRawValue();
-
     const payload: RegisterPayload = {
       name: raw.name!.trim(),
       email: raw.email!.trim(),
@@ -75,7 +62,6 @@ export class RegisterComponent {
       role: raw.role!,
       specialty: raw.role === 'DOCTOR' ? raw.specialty!.trim() : undefined
     };
-
     this.auth.register(payload).subscribe({
       next: () => {
         this.app.showToast('Account created successfully! Please sign in.', 'success');

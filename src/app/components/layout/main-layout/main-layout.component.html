@@ -1,5 +1,4 @@
 <div class="layout-wrapper">
-
     <aside class="sidebar" [class.show]="isSidebarOpen">
         <div class="sidebar-header">
             <a routerLink="/" class="brand-logo text-decoration-none">
@@ -10,9 +9,7 @@
                 <i class="bi bi-x-lg"></i>
             </button>
         </div>
-
         <nav class="sidebar-nav">
-          
             <ng-container *ngIf="userRole === 'ADMIN' || userRole === 'SUPER_ADMIN'">
                 <div class="small fw-bold text-uppercase text-muted mb-2 px-3" style="font-size: 0.75rem;">
                     Administration</div>
@@ -29,8 +26,6 @@
                     <i class="bi bi-cash-coin"></i> Financial
                 </a>
             </ng-container>
-
-            
             <ng-container *ngIf="userRole === 'SUPER_ADMIN'">
                 <div class="small fw-bold text-uppercase text-muted mb-2 px-3 mt-3" style="font-size: 0.75rem;">
                     System Management</div>
@@ -41,8 +36,6 @@
                     <i class="bi bi-person-gear"></i> Admins & Users
                 </a>
             </ng-container>
-
-           
             <ng-container *ngIf="userRole === 'DOCTOR'">
                 <div class="small fw-bold text-uppercase text-muted mb-2 px-3" style="font-size: 0.75rem;">Practice
                 </div>
@@ -56,8 +49,6 @@
                     <i class="bi bi-list-check"></i> Appointments
                 </a>
             </ng-container>
-
-            
             <ng-container *ngIf="userRole === 'PATIENT'">
                 <div class="small fw-bold text-uppercase text-muted mb-2 px-3" style="font-size: 0.75rem;">Personal
                 </div>
@@ -71,13 +62,11 @@
                     <i class="bi bi-plus-circle"></i> Book Appointment
                 </a>
             </ng-container>
-
             <div class="mt-auto"></div>
             <a routerLink="/profile" routerLinkActive="active" class="nav-item">
                 <i class="bi bi-person-circle"></i> Profile
             </a>
         </nav>
-
         <div class="sidebar-footer">
             <button class="btn btn-light w-100 text-danger d-flex align-items-center justify-content-center gap-2"
                 (click)="logout()">
@@ -85,28 +74,22 @@
             </button>
         </div>
     </aside>
-
-    
     <main class="main-content">
-       
         <header class="top-header">
             <div class="d-flex align-items-center gap-3">
                 <button class="btn btn-link text-dark d-lg-none p-0" (click)="toggleSidebar()">
                     <i class="bi bi-list fs-4"></i>
                 </button>
-
                 <div class="header-search d-none d-md-block">
                     <i class="bi bi-search"></i>
                     <input type="text" class="form-control rounded-pill" placeholder="Search anything...">
                 </div>
             </div>
-
             <div class="header-actions">
                 <button class="action-btn">
                     <i class="bi bi-bell fs-5"></i>
                     <span class="badge-dot"></span>
                 </button>
-
                 <div class="dropdown">
                     <button class="btn btn-light rounded-pill d-flex align-items-center gap-2 px-3 py-1 border"
                         data-bs-toggle="dropdown">
@@ -132,13 +115,11 @@
                 </div>
             </div>
         </header>
-
         <div class="p-4">
             <router-outlet></router-outlet>
         </div>
     </main>
 </div>
-
 <div class="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-lg-none" style="z-index: 1035;"
     *ngIf="isSidebarOpen" (click)="toggleSidebar()">
 </div>

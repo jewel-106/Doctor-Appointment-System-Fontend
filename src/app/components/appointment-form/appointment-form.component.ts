@@ -5,7 +5,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AppointmentService } from '../../services/appointment.service';
 import { Appointment } from '../../models/appointment.model';
 import { AuthService } from '../../services/auth.service';
-
 @Component({
     selector: 'app-appointment-form',
     standalone: true,
@@ -19,8 +18,6 @@ export class AppointmentFormComponent implements OnInit {
     private router = inject(Router);
     private route = inject(ActivatedRoute);
     private auth = inject(AuthService);
-
-
     form = this.fb.group({
         patientName: ['', [Validators.required, Validators.minLength(2)]],
         patientEmail: ['', [Validators.required, Validators.email]],
@@ -35,7 +32,6 @@ export class AppointmentFormComponent implements OnInit {
         notes: [''],
         reason: ['']
     });
-
     isEdit = false;
     id!: number;
     doctors: any[] = [];
@@ -44,23 +40,18 @@ export class AppointmentFormComponent implements OnInit {
     isAdmin = false;
     isDoctor = false;
     error = '';
-
     get today(): string {
         return new Date().toISOString().split('T')[0];
     }
-
     get activeDoctors() {
         return this.doctors.filter(d => d.active !== false);
     }
-
     ngOnInit(): void {
         const user = this.auth.getUser();
         this.isPatient = user?.role === 'PATIENT';
         this.isAdmin = user?.role === 'ADMIN';
         this.isDoctor = user?.role === 'DOCTOR';
-
         this.loadDoctors();
-
         const idParam = this.route.snapshot.paramMap.get('id');
         if (idParam) {
             this.isEdit = true;
@@ -81,8 +72,6 @@ export class AppointmentFormComponent implements OnInit {
                         notes: apt.notes || '',
                         reason: apt.reason || ''
                     });
-
-                    
                     if (this.isPatient) {
                         this.form.get('patientEmail')?.disable();
                         this.form.get('status')?.disable();
@@ -91,14 +80,12 @@ export class AppointmentFormComponent implements OnInit {
                         this.form.get('appointmentTime')?.disable();
                         this.form.get('notes')?.disable();
                     } else if (this.isAdmin || this.isDoctor) {
-                       
                         this.form.get('patientName')?.disable();
                         this.form.get('patientEmail')?.disable();
                         this.form.get('patientPhone')?.disable();
                         this.form.get('patientAge')?.disable();
                         this.form.get('patientGender')?.disable();
                         this.form.get('emergencyContact')?.disable();
-
                         if (this.isDoctor) {
                             this.form.get('doctorId')?.disable();
                         }
@@ -122,7 +109,6 @@ export class AppointmentFormComponent implements OnInit {
             }
         }
     }
-
     loadDoctors() {
         this.loading = true;
         this.service.getDoctors().subscribe({
@@ -136,7 +122,6 @@ export class AppointmentFormComponent implements OnInit {
             }
         });
     }
-
     submit(): void {
         if (this.form.invalid || this.loading) return;
         this.loading = true;
@@ -171,7 +156,6 @@ export class AppointmentFormComponent implements OnInit {
             complete: () => this.loading = false
         });
     }
-
     cancel() {
         if (confirm('Are you sure you want to cancel?')) {
             this.router.navigate(['/appointments']);

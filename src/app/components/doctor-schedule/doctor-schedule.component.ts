@@ -12,7 +12,6 @@ import { AuthService } from '../../services/auth.service';
 import { Appointment } from '../../models/appointment.model';
 import { FullCalendarComponent } from '@fullcalendar/angular';
 import { AppComponent } from '../../app';
-
 @Component({
   selector: 'app-doctor-schedule',
   standalone: true,
@@ -26,19 +25,15 @@ export class DoctorScheduleComponent implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
   private app = inject(AppComponent);
-
   loading = signal(true);
   selectedEvent: Appointment | null = null;
   todayAppointments = signal<Appointment[]>([]);
-
-  // Schedule Modal
   showScheduleModal = false;
   schedule = {
     startDate: '',
     endDate: '',
     duration: 30
   };
-
   weekDays = [
     { name: 'Sunday', id: 0, active: false, blocks: [{ start: '09:00', end: '17:00' }] },
     { name: 'Monday', id: 1, active: true, blocks: [{ start: '09:00', end: '17:00' }] },
@@ -48,7 +43,6 @@ export class DoctorScheduleComponent implements OnInit {
     { name: 'Friday', id: 5, active: false, blocks: [{ start: '09:00', end: '12:00' }] },
     { name: 'Saturday', id: 6, active: false, blocks: [{ start: '09:00', end: '17:00' }] }
   ];
-
   calendarOptions: CalendarOptions = {
     plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
     initialView: 'timeGridDay',
@@ -70,11 +64,9 @@ export class DoctorScheduleComponent implements OnInit {
       this.selectedEvent = info.event.extendedProps.appointment;
     }
   };
-
   ngOnInit() {
     this.loadAppointments();
   }
-
   loadAppointments() {
     this.loading.set(true);
     this.appointmentService.getAppointments().subscribe({
@@ -89,7 +81,6 @@ export class DoctorScheduleComponent implements OnInit {
       }
     });
   }
-
   updateCalendarEvents(appointments: Appointment[]) {
     const events: EventInput[] = appointments.map(apt => ({
       title: `${apt.patientName} (${apt.status})`,
@@ -97,25 +88,20 @@ export class DoctorScheduleComponent implements OnInit {
       className: apt.status,
       extendedProps: { appointment: apt }
     }));
-
     this.calendarOptions = {
       ...this.calendarOptions,
       events: events
     };
   }
-
   changeView(view: string) {
     this.calendarComponent.getApi()?.changeView(view);
   }
-
   goToToday() {
     this.calendarComponent.getApi()?.today();
   }
-
   refresh() {
     this.loadAppointments();
   }
-
   updateStatus(id: number, status: 'confirmed' | 'complete' | 'cancelled') {
     this.appointmentService.updateAppointmentStatus(id, status).subscribe({
       next: () => {
@@ -124,53 +110,39 @@ export class DoctorScheduleComponent implements OnInit {
       error: () => alert('Something went wrong! Please try again.')
     });
   }
-
   viewAppointment(id: number) {
     this.router.navigate(['/view', id]);
   }
-
   private updateTodayAppointments(all: Appointment[]) {
     const today = new Date().toISOString().split('T')[0];
     this.todayAppointments.set(all.filter(a => a.appointmentDate === today));
   }
-
   toggleScheduleModal() {
     this.showScheduleModal = !this.showScheduleModal;
   }
-
   addBlock(dayIndex: number) {
     this.weekDays[dayIndex].blocks.push({ start: '09:00', end: '13:00' });
   }
-
   removeTimeBlock(dayIndex: number, blockIndex: number) {
     this.weekDays[dayIndex].blocks.splice(blockIndex, 1);
   }
-
   saveSchedule() {
     const slots: any[] = [];
     const start = new Date(this.schedule.startDate);
     const end = new Date(this.schedule.endDate);
-    const doctor = this.authService.getUser(); // Assumes doctor is logged in and has user info
-
-    // Validate inputs
+    const doctor = this.authService.getUser();
     if (!this.schedule.startDate || !this.schedule.endDate) {
       this.app.showToast('Please select start and end dates', 'error');
       return;
     }
-
     if (start > end) {
       this.app.showToast('Start date must be before end date', 'error');
       return;
     }
-
-    // Loop through dates
     for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-      const dayOfWeek = d.getDay(); // 0 = Sun, 1 = Mon...
-
+      const dayOfWeek = d.getDay();
       const dayConfig = this.weekDays.find(wd => wd.id === dayOfWeek);
       if (!dayConfig || !dayConfig.active) continue;
-
-      // Validate blocks do not overlap
       for (let i = 0; i < dayConfig.blocks.length; i++) {
         for (let j = i + 1; j < dayConfig.blocks.length; j++) {
           const b1 = dayConfig.blocks[i];
@@ -181,46 +153,35 @@ export class DoctorScheduleComponent implements OnInit {
           }
         }
       }
-
-      // Iterate through each time block for the day
       for (const block of dayConfig.blocks) {
         let currentTime = new Date(`2000-01-01T${block.start}`);
         const endTime = new Date(`2000-01-01T${block.end}`);
-
         while (currentTime < endTime) {
           const slotStart = currentTime.toTimeString().substring(0, 5);
-
-          // Add duration
           const nextTime = new Date(currentTime.getTime() + this.schedule.duration * 60000);
           if (nextTime > endTime) break;
-
           const slotEnd = nextTime.toTimeString().substring(0, 5);
-
           slots.push({
-            doctorId: doctor.profileId, // Using profileId from AuthUser as Doctor ID
+            doctorId: doctor.profileId,
             availableDate: d.toISOString().split('T')[0],
             startTime: slotStart,
             endTime: slotEnd,
             isBooked: false
           });
-
           currentTime = nextTime;
         }
       }
     }
-
     if (slots.length === 0) {
       this.app.showToast('No slots generated based on your selection.', 'info');
       return;
     }
-
     this.loading.set(true);
     this.appointmentService.createDoctorSlots(slots).subscribe({
       next: () => {
         this.app.showToast('Schedule created successfully!', 'success');
         this.showScheduleModal = false;
         this.loading.set(false);
-        // Ideally refresh calendar or fetch new slots to show on calendar
       },
       error: (err) => {
         console.error(err);
@@ -229,7 +190,6 @@ export class DoctorScheduleComponent implements OnInit {
       }
     });
   }
-
   formatDate(date: string) {
     return new Date(date).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
   }

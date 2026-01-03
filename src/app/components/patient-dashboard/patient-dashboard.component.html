@@ -1,32 +1,28 @@
 <div class="container-fluid py-4">
-    
     <div class="row mb-4">
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <h2 class="fw-bold mb-1" style="color: #667eea;">
-                        <i class="bi bi-person-circle me-2"></i>Patient
+                        <i class="bi bi-person-heart me-2"></i>Your Health Oasis
                     </h2>
-                    <p class="text-muted mb-0">Welcome back, {{ currentPatient?.name }}! Here's your health overview.
-                    </p>
+
                 </div>
                 <button class="btn btn-primary" (click)="navigateTo('/new')">
-                    <i class="bi bi-plus-circle me-2"></i>Book Appointment
+                    <i class="bi bi-plus-circle me-2"></i>Plan a Visit
                 </button>
             </div>
         </div>
     </div>
-
- 
     <div class="row g-4 mb-4">
         <div class="col-xl-3 col-md-6">
             <div class="card border-start border-4 border-primary shadow h-100 py-2 border-0 hover-lift">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs fw-bold text-primary text-uppercase mb-1">Total Appointments</div>
+                            <div class="text-xs fw-bold text-primary text-uppercase mb-1">Life Activities</div>
                             <div class="h5 mb-0 fw-bold text-gray-800">{{ totalAppointments }}</div>
-                            <div class="small text-muted mt-1">All time</div>
+                            <div class="small text-muted mt-1">Visits so far</div>
                         </div>
                         <div class="col-auto"><i class="bi bi-calendar-check fs-2 text-primary opacity-50"></i></div>
                     </div>
@@ -38,9 +34,9 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs fw-bold text-success text-uppercase mb-1">Upcoming</div>
+                            <div class="text-xs fw-bold text-success text-uppercase mb-1">Your Next Steps</div>
                             <div class="h5 mb-0 fw-bold text-gray-800">{{ upcomingCount }}</div>
-                            <div class="small text-muted mt-1">Scheduled ahead</div>
+                            <div class="small text-muted mt-1">Ready for you</div>
                         </div>
                         <div class="col-auto"><i class="bi bi-clock-history fs-2 text-success opacity-50"></i></div>
                     </div>
@@ -52,9 +48,9 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs fw-bold text-info text-uppercase mb-1">Completed</div>
+                            <div class="text-xs fw-bold text-info text-uppercase mb-1">Finished Journeys</div>
                             <div class="h5 mb-0 fw-bold text-gray-800">{{ completedCount }}</div>
-                            <div class="small text-muted mt-1">Successfully treated</div>
+                            <div class="small text-muted mt-1">Successfully cared for</div>
                         </div>
                         <div class="col-auto"><i class="bi bi-check-circle fs-2 text-info opacity-50"></i></div>
                     </div>
@@ -66,9 +62,9 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs fw-bold text-warning text-uppercase mb-1">Pending</div>
+                            <div class="text-xs fw-bold text-warning text-uppercase mb-1">Awaiting Care</div>
                             <div class="h5 mb-0 fw-bold text-gray-800">{{ pendingCount }}</div>
-                            <div class="small text-muted mt-1">Awaiting confirmation</div>
+                            <div class="small text-muted mt-1">Just a moment more</div>
                         </div>
                         <div class="col-auto"><i class="bi bi-hourglass-split fs-2 text-warning opacity-50"></i></div>
                     </div>
@@ -76,10 +72,7 @@
             </div>
         </div>
     </div>
-
-  
     <div class="row g-4 mb-4">
-       
         <div class="col-xl-8">
             <div class="card shadow border-0">
                 <div
@@ -138,7 +131,6 @@
                 </div>
             </div>
         </div>
-        
         <div class="col-xl-4">
             <div class="card shadow border-0">
                 <div class="card-header bg-white py-3 border-bottom-0">
@@ -153,10 +145,7 @@
             </div>
         </div>
     </div>
-
-
     <div class="row g-4">
-      
         <div class="col-xl-4">
             <div class="card shadow border-0">
                 <div class="card-header bg-white py-3 border-bottom-0">
@@ -177,7 +166,6 @@
                 </div>
             </div>
         </div>
-      
         <div class="col-xl-8">
             <div class="card shadow border-0">
                 <div class="card-header bg-white py-3 border-bottom-0">
