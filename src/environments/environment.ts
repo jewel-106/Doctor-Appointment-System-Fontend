@@ -1,4 +1,4 @@
 export const environment = {
     production: false,
-    apiUrl: 'http://192.168.0.101:5000'
+    apiUrl: 'https://doctor-appointment-system-backend-h06m.onrender.com'
 };
