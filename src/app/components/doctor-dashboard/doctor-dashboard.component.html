@@ -1,0 +1,304 @@
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="fw-bold text-success mb-1">
+                <i class="bi bi-speedometer2 me-2"></i>Doctor Dashboard
+            </h2>
+            <p class="text-muted">Welcome back, Dr. {{ currentDoctor?.name }}!</p>
+        </div>
+    </div>
+
+   
+    <div class="row g-4 mb-4">
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-start border-4 border-primary shadow h-100 py-2 border-0 hover-lift">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs fw-bold text-primary text-uppercase mb-1">Total Patients</div>
+                            <div class="h5 mb-0 fw-bold text-gray-800">{{ totalPatients }}</div>
+                            <div class="small text-muted mt-1">Unique patients served</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-people fs-2 text-primary opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-start border-4 border-success shadow h-100 py-2 border-0 hover-lift">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs fw-bold text-success text-uppercase mb-1">Today's Appointments</div>
+                            <div class="h5 mb-0 fw-bold text-gray-800">{{ todaysCount }}</div>
+                            <div class="small text-muted mt-1">Scheduled for today</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-calendar-day fs-2 text-success opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-start border-4 border-info shadow h-100 py-2 border-0 hover-lift">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs fw-bold text-info text-uppercase mb-1">This Month Earnings</div>
+                            <div class="h5 mb-0 fw-bold text-gray-800">৳{{ monthlyEarnings | number }}</div>
+                            <div class="small text-muted mt-1">Current month revenue</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-currency-dollar fs-2 text-info opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-start border-4 border-warning shadow h-100 py-2 border-0 hover-lift">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs fw-bold text-warning text-uppercase mb-1">Total Earnings (2025)</div>
+                            <div class="h5 mb-0 fw-bold text-gray-800">৳{{ totalEarnings | number }}</div>
+                            <div class="small text-muted mt-1">Year to date</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-cash-stack fs-2 text-warning opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-start border-4 border-danger shadow h-100 py-2 border-0 hover-lift">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs fw-bold text-danger text-uppercase mb-1">Pending</div>
+                            <div class="h5 mb-0 fw-bold text-gray-800">{{ pendingCount }}</div>
+                            <div class="small text-muted mt-1">Awaiting confirmation</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-hourglass-split fs-2 text-danger opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-start border-4 border-success shadow h-100 py-2 border-0 hover-lift">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs fw-bold text-success text-uppercase mb-1">Confirmed</div>
+                            <div class="h5 mb-0 fw-bold text-gray-800">{{ confirmedCount }}</div>
+                            <div class="small text-muted mt-1">Ready to serve</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-check-circle fs-2 text-success opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-start border-4 border-primary shadow h-100 py-2 border-0 hover-lift">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs fw-bold text-primary text-uppercase mb-1">Completed</div>
+                            <div class="h5 mb-0 fw-bold text-gray-800">{{ completedCount }}</div>
+                            <div class="small text-muted mt-1">Successfully treated</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-clipboard-check fs-2 text-primary opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-start border-4 border-secondary shadow h-100 py-2 border-0 hover-lift">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs fw-bold text-secondary text-uppercase mb-1">This Week</div>
+                            <div class="h5 mb-0 fw-bold text-gray-800">{{ thisWeekCount }}</div>
+                            <div class="small text-muted mt-1">Last 7 days</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-calendar-week fs-2 text-secondary opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   
+    <div class="row g-4 mb-4">
+      
+        <div class="col-xl-8">
+            <div class="card shadow border-0">
+                <div class="card-header bg-white py-3 border-bottom-0">
+                    <h6 class="mb-0 fw-bold text-success">
+                        <i class="bi bi-graph-up me-2"></i>Appointments Trend (Last 7 Days)
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div style="height: 300px;">
+                        <canvas baseChart [data]="lineChartData" [options]="lineChartOptions" type="line">
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+     
+        <div class="col-xl-4">
+            <div class="card shadow border-0">
+                <div class="card-header bg-white py-3 border-bottom-0">
+                    <h6 class="mb-0 fw-bold text-success">
+                        <i class="bi bi-pie-chart me-2"></i>Status Distribution
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div style="height: 300px;">
+                        <canvas baseChart [data]="doughnutChartData" [options]="doughnutChartOptions" type="doughnut">
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+ 
+    <div class="row g-4 mb-4">
+        <div class="col-12">
+            <div class="card shadow border-0">
+                <div class="card-header bg-white py-3 border-bottom-0">
+                    <h6 class="mb-0 fw-bold text-success">
+                        <i class="bi bi-bar-chart me-2"></i>Monthly Earnings - 2025 (BDT)
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div style="height: 350px;">
+                        <canvas baseChart [data]="barChartData" [options]="barChartOptions" type="bar">
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow border-0">
+                <div
+                    class="card-header bg-white py-3 d-flex justify-content-between align-items-center border-bottom-0">
+                    <h6 class="mb-0 fw-bold text-success">
+                        <i class="bi bi-calendar-event me-2"></i>Today's Appointments
+                    </h6>
+                    <button class="btn btn-sm btn-outline-success rounded-pill px-3"
+                        (click)="navigateTo('/appointments')">
+                        View All
+                    </button>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0 align-middle">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="ps-4 border-0">Time</th>
+                                    <th class="border-0">Patient</th>
+                                    <th class="border-0">Contact</th>
+                                    <th class="border-0">Reason</th>
+                                    <th class="border-0">Status</th>
+                                    <th class="border-0">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let apt of todayAppointments">
+                                    <td class="ps-4 border-bottom-0">
+                                        <div class="fw-bold text-success">{{ apt.appointmentTime }}</div>
+                                    </td>
+                                    <td class="border-bottom-0">
+                                        <div class="fw-bold">{{ apt.patientName }}</div>
+                                        <div class="small text-muted">{{ apt.patientEmail }}</div>
+                                        <div class="small text-muted" *ngIf="apt.patientAge || apt.patientGender">
+                                            {{ apt.patientAge ? apt.patientAge + ' yrs' : '' }}
+                                            {{ apt.patientGender ? '(' + apt.patientGender + ')' : '' }}
+                                        </div>
+                                    </td>
+                                    <td class="border-bottom-0">
+                                        <div class="small">{{ apt.patientPhone }}</div>
+                                    </td>
+                                    <td class="border-bottom-0">
+                                        <div class="small">{{ apt.reason || 'N/A' }}</div>
+                                    </td>
+                                    <td class="border-bottom-0">
+                                        <span class="badge rounded-pill" [ngClass]="{
+                      'bg-warning text-dark': apt.status === 'pending',
+                      'bg-success': apt.status === 'confirmed',
+                      'bg-danger': apt.status === 'cancelled',
+                      'bg-primary': apt.status === 'complete'
+                    }">{{ apt.status | uppercase }}</span>
+                                    </td>
+                                    <td class="border-bottom-0">
+                                        <div class="d-flex gap-2 mb-2">
+                                            <button class="btn btn-sm btn-outline-info border-0"
+                                                (click)="viewAppointment(apt.id!)" title="View Details">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-primary border-0"
+                                                (click)="edit(apt.id!)" title="Edit">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-secondary border-0"
+                                                (click)="printSlip(apt)" title="Print">
+                                                <i class="bi bi-printer"></i>
+                                            </button>
+                                        </div>
+
+                                        <div class="btn-group btn-group-sm"
+                                            *ngIf="apt.status !== 'cancelled' && apt.status !== 'complete'">
+                                            <button class="btn btn-outline-success"
+                                                (click)="changeStatus(apt, 'confirmed')"
+                                                *ngIf="apt.status === 'pending'">Confirm</button>
+                                            <button class="btn btn-outline-primary"
+                                                (click)="changeStatus(apt, 'complete')"
+                                                *ngIf="apt.status === 'confirmed'">Complete</button>
+                                            <button class="btn btn-outline-danger"
+                                                (click)="changeStatus(apt, 'cancelled')">Cancel</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="todayAppointments.length === 0">
+                                    <td colspan="6" class="text-center py-5 text-muted border-bottom-0">
+                                        <i class="bi bi-calendar-x display-4 d-block mb-2 opacity-50"></i>
+                                        No appointments scheduled for today
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,145 @@
+<div class="register-container">
+
+
+  <div class="bg-gradient"></div>
+  <div class="bg-pattern"></div>
+
+
+  <div class="register-card">
+
+
+    <div class="brand-header">
+      <div class="logo-circle">
+        <i class="bi bi-heart-pulse-fill"></i>
+      </div>
+      <h1 class="brand-name">Join BD Healthcare</h1>
+      <p class="brand-tagline">Create your account to get started</p>
+    </div>
+
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="register-form">
+
+
+      <div class="form-group">
+        <label for="name" class="form-label">Full Name</label>
+        <div class="input-wrapper">
+          <i class="bi bi-person input-icon"></i>
+          <input type="text" id="name" class="form-input" placeholder="Enter your full name" formControlName="name"
+            autocomplete="name">
+        </div>
+      </div>
+
+
+      <div class="form-group">
+        <label for="email" class="form-label">Email Address</label>
+        <div class="input-wrapper">
+          <i class="bi bi-envelope input-icon"></i>
+          <input type="email" id="email" class="form-input" placeholder="you@example.com" formControlName="email"
+            autocomplete="email">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="phone" class="form-label">Phone Number</label>
+        <div class="input-wrapper">
+          <i class="bi bi-telephone input-icon"></i>
+          <input type="tel" id="phone" class="form-input" placeholder="017xxxxxxxx" formControlName="phone"
+            autocomplete="tel">
+        </div>
+      </div>
+
+
+      <div class="form-group">
+        <label for="password" class="form-label">Password</label>
+        <div class="input-wrapper">
+          <i class="bi bi-lock input-icon"></i>
+          <input [type]="showPassword ? 'text' : 'password'" id="password" class="form-input"
+            placeholder="At least 6 characters" formControlName="password" autocomplete="new-password">
+          <button type="button" class="password-toggle" (click)="showPassword = !showPassword" tabindex="-1">
+            <i class="bi" [class.bi-eye]="!showPassword" [class.bi-eye-slash]="showPassword"></i>
+          </button>
+        </div>
+      </div>
+
+
+      <div class="form-group">
+        <label for="role" class="form-label">Register As</label>
+        <div class="role-selector">
+          <label class="role-option" [class.active]="form.get('role')?.value === 'PATIENT'">
+            <input type="radio" name="role" value="PATIENT" formControlName="role" class="role-radio">
+            <div class="role-content">
+              <i class="bi bi-person-circle"></i>
+              <span>Patient</span>
+            </div>
+          </label>
+          <label class="role-option" [class.active]="form.get('role')?.value === 'DOCTOR'">
+            <input type="radio" name="role" value="DOCTOR" formControlName="role" class="role-radio">
+            <div class="role-content">
+              <i class="bi bi-heart-pulse"></i>
+              <span>Doctor</span>
+            </div>
+          </label>
+        </div>
+      </div>
+
+ 
+      <div class="form-group" *ngIf="form.get('role')?.value === 'DOCTOR'">
+        <label for="specialty" class="form-label">Medical Specialty</label>
+        <div class="input-wrapper">
+          <i class="bi bi-briefcase input-icon"></i>
+          <input type="text" id="specialty" class="form-input" placeholder="e.g., Cardiologist, Dentist"
+            formControlName="specialty">
+        </div>
+      </div>
+
+    
+      <div class="form-group">
+        <label class="checkbox-label">
+          <input type="checkbox" class="checkbox-input" required>
+          <span class="checkbox-text">
+            I agree to the <a href="#" class="link">Terms & Conditions</a> and <a href="#" class="link">Privacy
+              Policy</a>
+          </span>
+        </label>
+      </div>
+
+ 
+      <button type="submit" class="submit-btn" [disabled]="loading || form.invalid" [class.loading]="loading">
+        <span *ngIf="!loading">Create Account</span>
+        <span *ngIf="loading" class="loading-content">
+          <span class="spinner"></span>
+          Creating Account...
+        </span>
+      </button>
+
+
+      <div class="divider">
+        <span>or</span>
+      </div>
+
+      
+      <div class="login-section">
+        <p class="login-text">
+          Already have an account?
+          <a routerLink="/login" class="login-link">Sign in instead</a>
+        </p>
+      </div>
+
+    </form>
+
+
+    <div class="card-footer">
+      <a href="#" class="footer-link">Privacy Policy</a>
+      <span class="footer-dot">•</span>
+      <a href="#" class="footer-link">Terms of Service</a>
+    </div>
+
+  </div>
+
+
+  <a routerLink="/" class="back-home">
+    <i class="bi bi-arrow-left"></i>
+    Back to Home
+  </a>
+
+</div>

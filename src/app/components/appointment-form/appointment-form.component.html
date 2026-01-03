@@ -1,0 +1,164 @@
+<!-- src/app/components/appointment-form/appointment-form.component.html -->
+<div class="card shadow-sm">
+  <div class="card-header bg-primary text-white">
+    <h4 class="mb-0">
+      <i class="bi bi-calendar-plus me-2"></i>
+      {{ isEdit ? 'Edit Appointment' : 'New Appointment' }}
+    </h4>
+  </div>
+
+  <div class="card-body">
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+
+      <div class="row g-3">
+
+     
+        <div class="col-md-6">
+          <label class="form-label">
+            Patient Name <span class="text-danger">*</span>
+          </label>
+          <input type="text" formControlName="patientName" class="form-control"
+            [class.is-invalid]="form.get('patientName')?.invalid && form.get('patientName')?.touched"
+            placeholder="Enter patient full name" [readonly]="isDoctor || isAdmin">
+          <div class="invalid-feedback">
+            Name is required and must be at least 2 characters.
+          </div>
+        </div>
+
+    
+        <div class="col-md-6">
+          <label class="form-label">
+            Email Address <span class="text-danger">*</span>
+          </label>
+          <input type="email" formControlName="patientEmail" class="form-control"
+            [class.is-invalid]="form.get('patientEmail')?.invalid && form.get('patientEmail')?.touched"
+            placeholder="patient@example.com" [readonly]="isPatient || isDoctor || isAdmin">
+          <div class="invalid-feedback">
+            Please enter a valid email address.
+          </div>
+        </div>
+
+ 
+        <div class="col-md-6">
+          <label class="form-label">
+            Phone Number <span class="text-danger">*</span>
+          </label>
+          <input type="tel" formControlName="patientPhone" class="form-control"
+            [class.is-invalid]="form.get('patientPhone')?.invalid && form.get('patientPhone')?.touched"
+            placeholder="01700 000 000" [readonly]="isDoctor || isAdmin">
+          <div class="invalid-feedback">
+            Valid phone number is required (10-15 digits).
+          </div>
+        </div>
+
+
+        <div class="col-md-3">
+          <label class="form-label">Age <span class="text-danger">*</span></label>
+          <input type="number" formControlName="patientAge" class="form-control" placeholder="e.g. 25"
+            [class.is-invalid]="form.get('patientAge')?.invalid && form.get('patientAge')?.touched"
+            [readonly]="isDoctor || isAdmin">
+        </div>
+
+
+        <div class="col-md-3">
+          <label class="form-label">Gender <span class="text-danger">*</span></label>
+          <select formControlName="patientGender" class="form-select"
+            [class.is-invalid]="form.get('patientGender')?.invalid && form.get('patientGender')?.touched"
+            [disabled]="isDoctor || isAdmin">
+            <option value="">Select</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Emergency Contact</label>
+          <input type="text" formControlName="emergencyContact" class="form-control" placeholder="Name & Phone"
+            [readonly]="isDoctor || isAdmin">
+        </div>
+
+
+        <div class="col-md-6">
+          <label class="form-label">
+            Select Doctor <span class="text-danger">*</span>
+          </label>
+          <select formControlName="doctorId" class="form-select"
+            [class.is-invalid]="form.get('doctorId')?.invalid && form.get('doctorId')?.touched">
+            <option [ngValue]="null" disabled>Select a doctor</option>
+            <option *ngFor="let d of activeDoctors" [value]="d.id">
+              {{ d.name }} - {{ d.specialty || 'General Physician' }}
+            </option>
+          </select>
+          <div class="invalid-feedback">
+            Please select a doctor.
+          </div>
+        </div>
+
+
+        <div class="col-md-6">
+          <label class="form-label">
+            Appointment Date <span class="text-danger">*</span>
+          </label>
+          <input type="date" formControlName="appointmentDate" [min]="today" class="form-control"
+            [class.is-invalid]="form.get('appointmentDate')?.invalid && form.get('appointmentDate')?.touched">
+          <div class="invalid-feedback">
+            Please select a valid date (today or future).
+          </div>
+        </div>
+
+
+        <div class="col-md-6">
+          <label class="form-label">
+            Appointment Time <span class="text-danger">*</span>
+          </label>
+          <input type="time" formControlName="appointmentTime" class="form-control"
+            [class.is-invalid]="form.get('appointmentTime')?.invalid && form.get('appointmentTime')?.touched">
+          <div class="invalid-feedback">
+            Please select a time.
+          </div>
+        </div>
+
+
+        <div class="col-md-6" *ngIf="!isPatient">
+          <label class="form-label">Status</label>
+          <select formControlName="status" class="form-select">
+            <option value="pending">Pending</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="cancelled">Cancelled</option>
+            <option value="complete">Complete</option>
+          </select>
+        </div>
+
+   
+        <div class="col-12">
+          <label class="form-label">Reason for Visit</label>
+          <textarea formControlName="reason" class="form-control" rows="3"
+            placeholder="Symptoms, previous history, or special request..." [readonly]="isDoctor || isAdmin"></textarea>
+          <small class="text-muted" *ngIf="isDoctor || isAdmin">
+            <i class="bi bi-info-circle"></i> Only patients can edit the reason for visit
+          </small>
+        </div>
+
+
+        <div class="col-12" *ngIf="form.get('notes')?.value">
+          <label class="form-label">Doctor's Note/Advice</label>
+          <textarea formControlName="notes" class="form-control" rows="3" readonly></textarea>
+        </div>
+
+    
+        <div class="col-12 mt-4">
+          <button type="submit" class="btn btn-primary btn-lg me-3" [disabled]="form.invalid || loading">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+            {{ loading ? 'Saving...' : (isEdit ? 'Update Appointment' : 'Create Appointment') }}
+          </button>
+
+          <button type="button" class="btn btn-outline-secondary btn-lg" (click)="cancel()" [disabled]="loading">
+            Cancel
+          </button>
+        </div>
+
+      </div>
+    </form>
+  </div>
+</div>

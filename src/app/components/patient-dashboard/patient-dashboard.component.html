@@ -1,0 +1,230 @@
+<div class="container-fluid py-4">
+    
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="fw-bold mb-1" style="color: #667eea;">
+                        <i class="bi bi-person-circle me-2"></i>Patient
+                    </h2>
+                    <p class="text-muted mb-0">Welcome back, {{ currentPatient?.name }}! Here's your health overview.
+                    </p>
+                </div>
+                <button class="btn btn-primary" (click)="navigateTo('/new')">
+                    <i class="bi bi-plus-circle me-2"></i>Book Appointment
+                </button>
+            </div>
+        </div>
+    </div>
+
+ 
+    <div class="row g-4 mb-4">
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-start border-4 border-primary shadow h-100 py-2 border-0 hover-lift">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs fw-bold text-primary text-uppercase mb-1">Total Appointments</div>
+                            <div class="h5 mb-0 fw-bold text-gray-800">{{ totalAppointments }}</div>
+                            <div class="small text-muted mt-1">All time</div>
+                        </div>
+                        <div class="col-auto"><i class="bi bi-calendar-check fs-2 text-primary opacity-50"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-start border-4 border-success shadow h-100 py-2 border-0 hover-lift">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs fw-bold text-success text-uppercase mb-1">Upcoming</div>
+                            <div class="h5 mb-0 fw-bold text-gray-800">{{ upcomingCount }}</div>
+                            <div class="small text-muted mt-1">Scheduled ahead</div>
+                        </div>
+                        <div class="col-auto"><i class="bi bi-clock-history fs-2 text-success opacity-50"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-start border-4 border-info shadow h-100 py-2 border-0 hover-lift">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs fw-bold text-info text-uppercase mb-1">Completed</div>
+                            <div class="h5 mb-0 fw-bold text-gray-800">{{ completedCount }}</div>
+                            <div class="small text-muted mt-1">Successfully treated</div>
+                        </div>
+                        <div class="col-auto"><i class="bi bi-check-circle fs-2 text-info opacity-50"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-start border-4 border-warning shadow h-100 py-2 border-0 hover-lift">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs fw-bold text-warning text-uppercase mb-1">Pending</div>
+                            <div class="h5 mb-0 fw-bold text-gray-800">{{ pendingCount }}</div>
+                            <div class="small text-muted mt-1">Awaiting confirmation</div>
+                        </div>
+                        <div class="col-auto"><i class="bi bi-hourglass-split fs-2 text-warning opacity-50"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  
+    <div class="row g-4 mb-4">
+       
+        <div class="col-xl-8">
+            <div class="card shadow border-0">
+                <div
+                    class="card-header bg-white py-3 d-flex justify-content-between align-items-center border-bottom-0">
+                    <h6 class="mb-0 fw-bold text-primary"><i class="bi bi-calendar-event me-2"></i>Upcoming Appointments
+                    </h6>
+                    <button class="btn btn-sm btn-outline-primary rounded-pill px-3"
+                        (click)="navigateTo('/appointments')">View All</button>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0 align-middle">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="ps-4 border-0">Date & Time</th>
+                                    <th class="border-0">Doctor</th>
+                                    <th class="border-0">Specialty</th>
+                                    <th class="border-0">Status</th>
+                                    <th class="border-0">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let apt of upcomingAppointments">
+                                    <td class="ps-4 border-bottom-0">
+                                        <div class="fw-bold text-primary">{{ apt.appointmentDate }}</div>
+                                        <div class="small text-muted">{{ apt.appointmentTime }}</div>
+                                    </td>
+                                    <td class="border-bottom-0">
+                                        <div class="fw-bold">{{ apt.doctorName || 'N/A' }}</div>
+                                    </td>
+                                    <td class="border-bottom-0"><span class="badge bg-light text-dark">{{
+                                            apt.doctorSpecialty || 'General' }}</span></td>
+                                    <td class="border-bottom-0">
+                                        <span class="badge rounded-pill"
+                                            [ngClass]="{ 'bg-warning text-dark': apt.status === 'pending', 'bg-success': apt.status === 'confirmed', 'bg-primary': apt.status === 'complete', 'bg-danger': apt.status === 'cancelled' }">{{
+                                            apt.status | uppercase }}</span>
+                                    </td>
+                                    <td class="border-bottom-0">
+                                        <div class="d-flex gap-2">
+                                            <button class="btn btn-sm btn-outline-primary"
+                                                (click)="viewAppointment(apt.id!)" title="View Details"><i
+                                                    class="bi bi-eye"></i></button>
+                                            <button class="btn btn-sm btn-outline-secondary" (click)="printSlip(apt)"
+                                                title="Print"><i class="bi bi-printer"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="upcomingAppointments.length === 0">
+                                    <td colspan="5" class="text-center py-5 text-muted border-bottom-0"><i
+                                            class="bi bi-calendar-x display-4 d-block mb-2 opacity-50"></i>No upcoming
+                                        appointments</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-4">
+            <div class="card shadow border-0">
+                <div class="card-header bg-white py-3 border-bottom-0">
+                    <h6 class="mb-0 fw-bold text-primary"><i class="bi bi-pie-chart me-2"></i>Appointment Status</h6>
+                </div>
+                <div class="card-body">
+                    <div style="height: 300px;">
+                        <canvas baseChart [data]="doughnutChartData" [options]="doughnutChartOptions"
+                            type="doughnut"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row g-4">
+      
+        <div class="col-xl-4">
+            <div class="card shadow border-0">
+                <div class="card-header bg-white py-3 border-bottom-0">
+                    <h6 class="mb-0 fw-bold text-primary"><i class="bi bi-lightning me-2"></i>Quick Actions</h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-3">
+                        <button class="btn btn-primary btn-lg d-flex align-items-center justify-content-center gap-2"
+                            (click)="navigateTo('/new')"><i class="bi bi-plus-circle"></i>Book New Appointment</button>
+                        <button
+                            class="btn btn-outline-primary btn-lg d-flex align-items-center justify-content-center gap-2"
+                            (click)="navigateTo('/appointments')"><i class="bi bi-list-ul"></i>View All
+                            Appointments</button>
+                        <button
+                            class="btn btn-outline-secondary btn-lg d-flex align-items-center justify-content-center gap-2"
+                            (click)="navigateTo('/profile')"><i class="bi bi-person"></i>My Profile</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+      
+        <div class="col-xl-8">
+            <div class="card shadow border-0">
+                <div class="card-header bg-white py-3 border-bottom-0">
+                    <h6 class="mb-0 fw-bold text-primary"><i class="bi bi-clock-history me-2"></i>Recent Appointments
+                    </h6>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0 align-middle">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="ps-4 border-0">Date</th>
+                                    <th class="border-0">Doctor</th>
+                                    <th class="border-0">Status</th>
+                                    <th class="border-0">Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let apt of recentAppointments">
+                                    <td class="ps-4 border-bottom-0">
+                                        <div class="fw-bold">{{ apt.appointmentDate }}</div>
+                                        <div class="small text-muted">{{ apt.appointmentTime }}</div>
+                                    </td>
+                                    <td class="border-bottom-0">
+                                        <div class="fw-bold">{{ apt.doctorName || 'N/A' }}</div>
+                                        <div class="small text-muted">{{ apt.doctorSpecialty }}</div>
+                                    </td>
+                                    <td class="border-bottom-0"><span class="badge rounded-pill"
+                                            [ngClass]="{ 'bg-warning text-dark': apt.status === 'pending', 'bg-success': apt.status === 'confirmed', 'bg-primary': apt.status === 'complete', 'bg-danger': apt.status === 'cancelled' }">{{
+                                            apt.status | uppercase }}</span></td>
+                                    <td class="border-bottom-0">
+                                        <div *ngIf="apt.notes" class="small"><i
+                                                class="bi bi-clipboard-check text-success me-1"></i>{{
+                                            apt.notes.substring(0, 50) }}{{ apt.notes.length > 50 ? '...' : '' }}</div>
+                                        <div *ngIf="!apt.notes" class="small text-muted">No notes</div>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="recentAppointments.length === 0">
+                                    <td colspan="4" class="text-center py-5 text-muted border-bottom-0"><i
+                                            class="bi bi-calendar-x display-4 d-block mb-2 opacity-50"></i>No recent
+                                        appointments</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

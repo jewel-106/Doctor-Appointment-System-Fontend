@@ -1,0 +1,210 @@
+<div class="container-fluid py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <div>
+            <h2 class="text-success fw-bold mb-1">My Schedule</h2>
+            <p class="text-muted small mb-0">Manage your appointments efficiently</p>
+        </div>
+        <div class="d-flex gap-3">
+            <button class="btn btn-primary btn-lg rounded-pill px-4 shadow" (click)="toggleScheduleModal()">
+                <i class="bi bi-clock-history me-2"></i> Set Availability
+            </button>
+            <button class="btn btn-outline-success btn-lg rounded-pill px-4 shadow-sm" (click)="refresh()">
+                <i class="bi bi-arrow-repeat me-2"></i> Refresh
+            </button>
+            <button class="btn btn-success btn-lg rounded-pill px-5 shadow" (click)="goToToday()">
+                <i class="bi bi-calendar-check me-2"></i> Today
+            </button>
+        </div>
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-lg-9">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+
+                <div class="card-header bg-gradient text-white border-0 p-4"
+                    style="background: linear-gradient(135deg, #28a745, #20c997)!important;">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0 fw-bold"><i class="bi bi-calendar3 me-3"></i>Appointment Calendar</h4>
+                        <div class="btn-group shadow">
+                            <button class="btn btn-light btn-sm rounded-start-pill"
+                                (click)="changeView('dayGridMonth')">
+                                <i class="bi bi-grid-3x3-gap"></i> Month
+                            </button>
+                            <button class="btn btn-light btn-sm" (click)="changeView('timeGridWeek')">
+                                <i class="bi bi-calendar-week"></i> Week
+                            </button>
+                            <button class="btn btn-light btn-sm rounded-end-pill" (click)="changeView('timeGridDay')">
+                                <i class="bi bi-calendar-day"></i> Day
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body p-0">
+                    <div *ngIf="loading()"
+                        class="position-absolute inset-0 bg-white bg-opacity-90 d-flex align-items-center justify-content-center z-10">
+                        <div class="spinner-border text-success" style="width: 4.5rem; height: 4.5rem;"></div>
+                    </div>
+                    <full-calendar #calendar [options]="calendarOptions"></full-calendar>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3">
+            <div class="card border-0 shadow-lg rounded-4 sticky-top" style="top: 1.5rem;">
+                <div class="card-header bg-primary text-white text-center py-4">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="bi bi-clock-history me-2"></i>
+                        Today's Appointments
+                        <span class="badge bg-light text-primary ms-2 fs-6">{{ todayAppointments().length }}</span>
+                    </h5>
+                </div>
+                <div class="card-body p-0" style="max-height: 78vh; overflow-y: auto;">
+                    <div *ngIf="todayAppointments().length === 0" class="p-5 text-center">
+                        <i class="bi bi-emoji-smile display-1 text-muted d-block mb-3"></i>
+                        <p class="text-muted">No appointments for today!</p>
+                    </div>
+
+                    <div *ngFor="let apt of todayAppointments()" class="p-3 border-bottom hover-shadow transition">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <h6 class="fw-bold mb-1">{{ apt.patientName }}</h6>
+                                <p class="small text-muted mb-0">
+                                    <i class="bi bi-clock me-1"></i>{{ apt.appointmentTime }}
+                                </p>
+                            </div>
+                            <span class="badge rounded-pill" [ngClass]="{
+                      'bg-warning text-dark': apt.status === 'pending',
+                      'bg-success text-white': apt.status === 'confirmed',
+                      'bg-secondary text-white': apt.status === 'complete',
+                      'bg-danger text-white': apt.status === 'cancelled'
+                    }">
+                                {{ apt.status }}
+                            </span>
+                        </div>
+
+                        <div class="btn-group w-100 mt-3"
+                            *ngIf="apt.id && apt.status !== 'cancelled' && apt.status !== 'complete'">
+                            <button class="btn btn-sm btn-outline-info rounded-start-pill flex-fill"
+                                (click)="viewAppointment(apt.id!)">
+                                <i class="bi bi-eye"></i> View
+                            </button>
+                            <button class="btn btn-sm btn-outline-success flex-fill" *ngIf="apt.status === 'pending'"
+                                (click)="updateStatus(apt.id!, 'confirmed')">
+                                <i class="bi bi-check-circle"></i> Confirm
+                            </button>
+                            <button class="btn btn-sm btn-outline-primary flex-fill"
+                                (click)="updateStatus(apt.id!, 'complete')">
+                                <i class="bi bi-check2-all"></i> Done
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger rounded-end-pill flex-fill"
+                                (click)="updateStatus(apt.id!, 'cancelled')">
+                                <i class="bi bi-x-circle"></i> Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Schedule Modal -->
+        <div class="modal fade show" tabindex="-1" *ngIf="showScheduleModal"
+            style="display: block; background: rgba(0,0,0,0.5)">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content border-0 shadow-lg rounded-4">
+                    <div class="modal-header bg-success text-white">
+                        <h5 class="modal-title fw-bold"><i class="bi bi-calendar-plus me-2"></i>Set Weekly Schedule</h5>
+                        <button type="button" class="btn-close btn-close-white"
+                            (click)="toggleScheduleModal()"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Start Date</label>
+                                <input type="date" class="form-control" [(ngModel)]="schedule.startDate">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">End Date</label>
+                                <input type="date" class="form-control" [(ngModel)]="schedule.endDate">
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label fw-bold">Appointment Duration (mins)</label>
+                                <input type="number" class="form-control w-25" [(ngModel)]="schedule.duration" min="10"
+                                    step="5">
+                            </div>
+
+                            <div class="col-12 mt-4">
+                                <label class="form-label fw-bold mb-3">Weekly Work Hours</label>
+                                <div class="table-responsive border rounded-4">
+                                    <table class="table table-hover align-middle mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th class="ps-4">Day</th>
+                                                <th>Start Time</th>
+                                                <th>End Time</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let day of weekDays; let i = index"
+                                                [class.table-active]="day.active">
+                                                <td class="ps-4" style="width: 25%;">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox"
+                                                            [(ngModel)]="day.active" [id]="'day'+i">
+                                                        <label class="form-check-label user-select-none fw-bold"
+                                                            [for]="'day'+i">
+                                                            {{ day.name }}
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                                <td colspan="2">
+                                                    <div *ngIf="day.active">
+                                                        <div *ngFor="let block of day.blocks; let bi = index"
+                                                            class="d-flex align-items-center gap-2 mb-2">
+                                                            <div class="input-group input-group-sm">
+                                                                <span class="input-group-text">Start</span>
+                                                                <input type="time" class="form-control"
+                                                                    [(ngModel)]="block.start">
+                                                                <span class="input-group-text">End</span>
+                                                                <input type="time" class="form-control"
+                                                                    [(ngModel)]="block.end">
+                                                            </div>
+                                                            <button class="btn btn-outline-danger btn-sm"
+                                                                (click)="removeTimeBlock(i, bi)"
+                                                                *ngIf="day.blocks.length > 1" title="Remove block">
+                                                                <i class="bi bi-trash"></i>
+                                                            </button>
+                                                            <button class="btn btn-outline-primary btn-sm"
+                                                                (click)="addBlock(i)"
+                                                                *ngIf="bi === day.blocks.length - 1"
+                                                                title="Add another block">
+                                                                <i class="bi bi-plus-lg"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <div *ngIf="!day.active" class="text-muted small">
+                                                        <i>Not available</i>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0">
+                        <button type="button" class="btn btn-light rounded-pill px-4"
+                            (click)="toggleScheduleModal()">Cancel</button>
+                        <button type="button" class="btn btn-success rounded-pill px-4" (click)="saveSchedule()">
+                            <i class="bi bi-calendar-check me-2"></i> Publish Schedule
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

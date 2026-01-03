@@ -1,0 +1,481 @@
+<div class="landing-universe">
+
+    <!-- Ambient Background -->
+    <div class="bg-stars"></div>
+    <div class="glow-orb top-right"></div>
+    <div class="glow-orb bottom-left"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar" [class.scrolled]="isScrolled">
+        <div class="container nav-inner">
+            <a routerLink="/" class="brand-link">
+                <div class="logo-box">
+                    <div class="logo-inner"></div>
+                </div>
+                <span class="brand-text">BD Healthcare</span>
+            </a>
+
+            <div class="nav-center desktop-only">
+                <a href="#features" class="nav-item">Features</a>
+                <a href="#roles" class="nav-item">Roles</a>
+                <a href="#pricing" class="nav-item">Pricing</a>
+                <a href="#about" class="nav-item">About</a>
+            </div>
+
+            <div class="nav-right">
+                <a routerLink="/login" class="nav-login">Sign In</a>
+                <a routerLink="/register" class="btn-glow-border">
+                    <span class="btn-content">Get Started</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="hero-container">
+            <div class="hero-chip">
+                <span class="chip-dot"></span>
+                <span class="chip-text">v2.0 : The Future of Healthcare</span>
+            </div>
+            <h1 class="hero-title">
+                Modern Healthcare <br>
+                <span class="text-gradient-gold">Simplified.</span>
+            </h1>
+            <p class="hero-subtitle">
+                The world's most advanced healthcare appointment system.
+                Designed for patients and doctors who demand precision, beauty, and speed.
+            </p>
+
+            <div class="hero-cta-group">
+                <a routerLink="/register" class="btn-primary-large">
+                    Start Free Today
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="icon-arr">
+                        <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </a>
+                <a routerLink="/login" class="btn-secondary-large">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polygon points="10 8 16 12 10 16 10 8"></polygon>
+                    </svg>
+                    Watch Demo
+                </a>
+            </div>
+
+            <div class="hero-showcase">
+                <div class="window-frame">
+                    <div class="window-header">
+                        <div class="traffic-lights">
+                            <span class="light red"></span>
+                            <span class="light yellow"></span>
+                            <span class="light green"></span>
+                        </div>
+                        <div class="address-bar">bdhealthcare.com/app</div>
+                    </div>
+                    <div class="window-content glass-ui">
+
+                        <div class="sidebar">
+                            <div class="skel-line w-60 mb-4"></div>
+                            <div class="skel-line w-80 mb-2"></div>
+                            <div class="skel-line w-70 mb-2"></div>
+                            <div class="skel-line w-50 mb-2"></div>
+                        </div>
+                        <div class="main-view">
+                            <div class="view-header">
+                                <div class="skel-block h-40 w-30"></div>
+                                <div class="skel-block h-40 w-20"></div>
+                            </div>
+                            <div class="calendar-grid">
+                                <div class="cal-card active">
+                                    <div class="card-glow"></div>
+                                    <div class="card-content">
+                                        <span class="time">10:00 AM</span>
+                                        <span class="title">Dr. Consultation</span>
+                                        <div class="avatars">
+                                            <div class="av"></div>
+                                            <div class="av"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cal-card"></div>
+                                <div class="cal-card"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="reflection-glow"></div>
+            </div>
+        </div>
+
+
+        <a href="#features" class="scroll-indicator">
+            <div class="scroll-mouse">
+                <div class="scroll-wheel"></div>
+            </div>
+            <span class="scroll-text">Scroll to explore</span>
+        </a>
+    </header>
+
+
+    <div class="ticker-wrap">
+        <div class="ticker">
+            <div class="ticker-item">TRUSTED BY:</div>
+            <div class="ticker-item">Medical Clinics</div>
+            <div class="ticker-item">Hospitals</div>
+            <div class="ticker-item">Private Practices</div>
+            <div class="ticker-item">Healthcare Centers</div>
+            <div class="ticker-item">Specialists</div>
+            <div class="ticker-item">General Practitioners</div>
+            <div class="ticker-item">Dental Clinics</div>
+        </div>
+    </div>
+
+
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-badge">Features</div>
+            <h2 class="section-title">Beyond expectations</h2>
+            <p class="section-desc">We've rethought every interaction to be faster, smarter, and more delightful.</p>
+
+            <div class="bento-grid">
+
+                <div class="bento-card card-tall">
+                    <div class="card-visual visual-gradient-1">
+                        <div class="phone-mock">
+                            <div class="notch"></div>
+                            <div class="screen">
+                                <div class="msg left">Available at 2pm?</div>
+                                <div class="msg right">Booked!</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-text">
+                        <h3>Mobile Perfection</h3>
+                        <p>A native-quality experience on every device. Smooth 60fps animations.</p>
+                    </div>
+                </div>
+
+
+                <div class="bento-card card-wide">
+                    <div class="card-text">
+                        <h3>Fast & Reliable</h3>
+                        <p>Lightning-fast performance. <span class="highlight">99.9% uptime</span> guaranteed.</p>
+                    </div>
+                    <div class="card-visual map-visual">
+                        <div class="pulse-dot p1"></div>
+                        <div class="pulse-dot p2"></div>
+                        <div class="pulse-dot p3"></div>
+                    </div>
+                </div>
+
+
+                <div class="bento-card">
+                    <div class="icon-box">⚡</div>
+                    <div class="card-text">
+                        <h3>Instant Sync</h3>
+                        <p>Changes reflect across all devices in real-time.</p>
+                    </div>
+                </div>
+
+                <div class="bento-card">
+                    <div class="icon-box">🔒</div>
+                    <div class="card-text">
+                        <h3>Bank-Grade Security</h3>
+                        <p>End-to-end encryption for all your sensitive health data.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="stats-section">
+        <div class="container stats-grid">
+            <div class="stat-box">
+                <span class="stat-num">99.9%</span>
+                <span class="stat-label">Uptime</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-num">50K+</span>
+                <span class="stat-label">Appointments</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-num">1000+</span>
+                <span class="stat-label">Doctors</span>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="roles-section" id="roles">
+        <div class="container">
+            <div class="section-badge center">Who is this for?</div>
+            <h2 class="section-title center">Tailored for everyone</h2>
+            <p class="section-desc center-mx">Designed experiences for the entire healthcare ecosystem.</p>
+
+            <div class="roles-grid">
+
+                <div class="role-card">
+                    <div class="role-icon patient-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </div>
+                    <h3>For Patients</h3>
+                    <p>Find doctors, book appointments, and manage your medical history with ease.</p>
+                    <ul class="role-features">
+                        <li><span>✓</span> Easy Appointment Booking</li>
+                        <li><span>✓</span> Medical History Access</li>
+                        <li><span>✓</span> Instant Notifications</li>
+                    </ul>
+                    <a routerLink="/register" class="btn-role">Join as Patient</a>
+                </div>
+
+
+                <div class="role-card featured">
+                    <div class="popular-badge">Most Popular</div>
+                    <div class="role-icon doctor-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                        </svg>
+                    </div>
+                    <h3>For Doctors</h3>
+                    <p>Manage appointments, set your schedule, and grow your practice effortlessly.</p>
+                    <ul class="role-features">
+                        <li><span>✓</span> Smart Scheduling</li>
+                        <li><span>✓</span> Patient Management</li>
+                        <li><span>✓</span> Analytics Dashboard</li>
+                    </ul>
+                    <a routerLink="/register" class="btn-role primary">Join as Doctor</a>
+                </div>
+
+
+                <div class="role-card">
+                    <div class="role-icon admin-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="9" y1="9" x2="15" y2="9"></line>
+                            <line x1="9" y1="15" x2="15" y2="15"></line>
+                        </svg>
+                    </div>
+                    <h3>For Administrators</h3>
+                    <p>Oversee operations, manage users, and maintain system excellence.</p>
+                    <ul class="role-features">
+                        <li><span>✓</span> Full System Control</li>
+                        <li><span>✓</span> User Management</li>
+                        <li><span>✓</span> Advanced Analytics</li>
+                    </ul>
+                    <a routerLink="/register" class="btn-role">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="tech-section">
+        <div class="container">
+            <div class="section-badge center">Technology</div>
+            <h2 class="section-title center">Built with modern tech</h2>
+            <p class="section-desc center-mx">Robust, scalable, and secure technologies powering our platform.</p>
+
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <div class="tech-icon angular">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M12 2L2 6l1.5 14L12 22l8.5-2L22 6l-10-4zm0 2.18l6.86 2.57-.93 8.87L12 18.1l-5.93-2.48-.93-8.87L12 4.18z" />
+                        </svg>
+                    </div>
+                    <span>Angular 20</span>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon spring">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M20.205 16.392c-2.469 3.289-7.741 2.179-11.122 2.338 0 0-.599.034-1.201.133 0 0 .228-.097.519-.198 2.374-.821 3.496-.986 4.939-1.727 2.71-1.388 5.408-4.413 5.957-7.555-1.032 3.022-4.17 5.623-7.027 6.679-1.955.722-5.492 1.424-5.493 1.424l-.143-.076c-2.405-1.17-2.475-6.38 1.894-8.059 1.916-.736 3.747-.332 5.818-.825 2.208-.525 4.766-2.18 5.805-4.344 1.165 3.458 2.565 8.866.054 12.21zm.042-13.28a9.212 9.212 0 0 1-1.065 1.89 9.982 9.982 0 0 0-7.167-3.031C6.492 1.971 2 6.463 2 11.985a9.983 9.983 0 0 0 3.205 7.334l.22.194a.856.856 0 1 1 .001.001l.149.132A9.96 9.96 0 0 0 12.015 22c5.278 0 9.613-4.108 9.984-9.292.274-2.539-.476-5.763-1.752-9.596z" />
+                        </svg>
+                    </div>
+                    <span>Spring Boot</span>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon postgres">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M17.128 0c-.316 0-.617.018-.922.045-1.107.098-2.157.39-3.138.824-.05.022-.098.046-.147.07-.73.348-1.406.778-2.01 1.283-.605-.505-1.28-.935-2.01-1.283-.05-.024-.098-.048-.147-.07-.98-.434-2.03-.726-3.138-.824C4.51.018 4.21 0 3.893 0 1.745 0 0 1.745 0 3.893v13.214C0 19.255 1.745 21 3.893 21c.316 0 .617-.018.922-.045 1.107-.098 2.157-.39 3.138-.824.05-.022.098-.046.147-.07.73-.348 1.406-.778 2.01-1.283.605.505 1.28.935 2.01 1.283.05.024.098.048.147.07.98.434 2.03.726 3.138.824.305.027.606.045.922.045 2.148 0 3.893-1.745 3.893-3.893V3.893C21 1.745 19.255 0 17.128 0z" />
+                        </svg>
+                    </div>
+                    <span>PostgreSQL</span>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon bootstrap">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M11.77 11.24H9.956V8.202h2.152c1.17 0 1.834.522 1.834 1.466 0 1.008-.773 1.572-2.172 1.572zm.324 1.206H9.957v3.348h2.231c1.459 0 2.232-.585 2.232-1.685s-.795-1.663-2.326-1.663zM24 11.39v1.218c-1.128.108-1.817.944-2.226 2.268-.407 1.319-.463 2.937-.42 4.186.045 1.3-.968 2.5-2.337 2.5H4.985c-1.37 0-2.383-1.2-2.337-2.5.043-1.249-.013-2.867-.42-4.186-.41-1.324-1.1-2.16-2.228-2.268V11.39c1.128-.108 1.819-.944 2.227-2.268.408-1.319.464-2.937.42-4.186-.045-1.3.968-2.5 2.338-2.5h14.032c1.37 0 2.382 1.2 2.337 2.5-.043 1.249.013 2.867.42 4.186.409 1.324 1.098 2.16 2.226 2.268zm-7.927 2.817c0-1.354-.953-2.333-2.368-2.488v-.057c1.04-.169 1.856-1.135 1.856-2.213 0-1.537-1.213-2.538-3.062-2.538h-4.16v10.172h4.181c2.218 0 3.553-1.086 3.553-2.876z" />
+                        </svg>
+                    </div>
+                    <span>Bootstrap 5</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="pricing-section" id="pricing">
+        <div class="container">
+            <div class="section-badge center">Pricing</div>
+            <h2 class="section-title center">Simple, transparent pricing</h2>
+            <p class="section-desc center-mx">Choose the plan that fits your needs.</p>
+
+            <div class="pricing-grid">
+
+                <div class="price-card glass">
+                    <div class="price-header">
+                        <h3>Patients</h3>
+                        <div class="price-val">$0<span class="period">/mo</span></div>
+                        <p>Forever free for all patients.</p>
+                    </div>
+                    <ul class="price-features">
+                        <li><span>✓</span> Unlimited Bookings</li>
+                        <li><span>✓</span> Medical Records</li>
+                        <li><span>✓</span> Email Notifications</li>
+                    </ul>
+                    <a routerLink="/register" class="btn-price-outline">Get Started</a>
+                </div>
+
+
+                <div class="price-card featured-glow">
+                    <div class="popular-tag">Most Popular</div>
+                    <div class="price-header">
+                        <h3>Doctors Pro</h3>
+                        <div class="price-val">$29<span class="period">/mo</span></div>
+                        <p>Everything you need to manage practice.</p>
+                    </div>
+                    <ul class="price-features">
+                        <li><span>✓</span> Everything in Free</li>
+                        <li><span>✓</span> Advanced Scheduling</li>
+                        <li><span>✓</span> Patient Management</li>
+                        <li><span>✓</span> Priority Support</li>
+                    </ul>
+                    <a routerLink="/register" class="btn-price-solid">Start Trial</a>
+                </div>
+
+
+                <div class="price-card glass">
+                    <div class="price-header">
+                        <h3>Enterprise</h3>
+                        <div class="price-val">Custom</div>
+                        <p>For large healthcare organizations.</p>
+                    </div>
+                    <ul class="price-features">
+                        <li><span>✓</span> Custom Integration</li>
+                        <li><span>✓</span> Dedicated Support</li>
+                        <li><span>✓</span> Advanced Analytics</li>
+                        <li><span>✓</span> SLA Guarantee</li>
+                    </ul>
+                    <a href="mailto:sales@bdhealthcare.com" class="btn-price-outline">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="about-section" id="about">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-text">
+                    <div class="section-badge">About Us</div>
+                    <h2 class="section-title">Revolutionizing healthcare access</h2>
+                    <p class="section-desc">We are dedicated to making quality healthcare accessible to everyone. Our
+                        platform ensures that medical care is just a click away.</p>
+                    <ul class="check-list">
+                        <li><span class="chk">✓</span> Verified Healthcare Professionals</li>
+                        <li><span class="chk">✓</span> 24/7 Customer Support</li>
+                        <li><span class="chk">✓</span> Secure Health Records</li>
+                        <li><span class="chk">✓</span> HIPAA Compliant</li>
+                    </ul>
+                    <a routerLink="/register" class="btn-secondary-large mt-4">Get Started Today</a>
+                </div>
+                <div class="about-visual">
+                    <div class="about-image-wrapper">
+                        <div class="floating-card card-1">
+                            <div class="card-icon">📅</div>
+                            <div class="card-info">
+                                <span class="card-label">Appointments</span>
+                                <span class="card-value">50K+</span>
+                            </div>
+                        </div>
+                        <div class="floating-card card-2">
+                            <div class="card-icon">⭐</div>
+                            <div class="card-info">
+                                <span class="card-label">Rating</span>
+                                <span class="card-value">4.9/5</span>
+                            </div>
+                        </div>
+                        <div class="floating-card card-3">
+                            <div class="card-icon">👨‍⚕️</div>
+                            <div class="card-info">
+                                <span class="card-label">Doctors</span>
+                                <span class="card-value">1000+</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="final-cta">
+        <div class="container">
+            <div class="cta-box-glow">
+                <h2>Ready to transform your healthcare experience?</h2>
+                <p>Join thousands of patients and doctors who trust BD Healthcare.</p>
+                <div class="cta-btns">
+                    <a routerLink="/register" class="btn-primary-large">Get Started Now</a>
+                    <a routerLink="/login" class="btn-secondary-large">Sign In</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <footer class="footer">
+        <div class="container footer-grid">
+            <div class="footer-brand">
+                <span class="brand-text">BD Healthcare</span>
+                <p>Making healthcare accessible for everyone.</p>
+                <div class="socials">
+                    <a href="#"><i class="bi bi-facebook"></i></a>
+                    <a href="#"><i class="bi bi-twitter"></i></a>
+                    <a href="#"><i class="bi bi-linkedin"></i></a>
+                </div>
+                <div class="copyright-text mt-4">
+                    © 2025 BD Healthcare. All rights reserved.
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Product</h4>
+                <a href="#features">Features</a>
+                <a href="#roles">Roles</a>
+                <a href="#pricing">Pricing</a>
+            </div>
+            <div class="footer-col">
+                <h4>Company</h4>
+                <a href="#about">About</a>
+                <a routerLink="/register">Careers</a>
+                <a href="#">Blog</a>
+            </div>
+            <div class="footer-col">
+                <h4>Legal</h4>
+                <a href="#">Privacy</a>
+                <a href="#">Terms</a>
+                <a href="#">Security</a>
+            </div>
+        </div>
+    </footer>
+
+</div>

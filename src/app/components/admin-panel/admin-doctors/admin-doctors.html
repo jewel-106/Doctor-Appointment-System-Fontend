@@ -1,0 +1,231 @@
+<div class="card shadow border-0">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+        <h5 class="mb-0 fw-bold text-primary">Doctors List</h5>
+        <button class="btn btn-primary" (click)="showAddDoctor = !showAddDoctor">
+            <i class="bi" [ngClass]="showAddDoctor ? 'bi-x-lg' : 'bi-plus-lg'"></i>
+            {{ showAddDoctor ? 'Cancel' : 'Add Doctor' }}
+        </button>
+    </div>
+
+    <div class="card-body">
+
+        <div *ngIf="showAddDoctor" class="mb-4 p-4 border rounded bg-light animate__animated animate__fadeIn">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0">{{ isEdit ? 'Edit Doctor' : 'Add New Doctor' }}</h5>
+                <button type="button" class="btn-close" (click)="resetForm()"></button>
+            </div>
+            <form [formGroup]="doctorForm" (ngSubmit)="addDoctor()" class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Name <span class="text-danger">*</span></label>
+                    <input formControlName="name" class="form-control" placeholder="Dr. Name" required />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Email <span class="text-danger">*</span></label>
+                    <input formControlName="email" type="email" class="form-control" placeholder="email@example.com"
+                        required />
+                </div>
+                <div class="col-md-6" *ngIf="!isEdit">
+                    <label class="form-label">Password <span class="text-danger">*</span></label>
+                    <input formControlName="password" type="password" class="form-control" placeholder="******"
+                        required />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Specialty <span class="text-danger">*</span></label>
+                    <select formControlName="specialty" class="form-select" required>
+                        <option value="">Select Specialty</option>
+                        <option *ngFor="let spec of specialties" [value]="spec">{{ spec }}</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Phone <span class="text-danger">*</span></label>
+                    <input formControlName="phone" class="form-control" placeholder="+880..." required />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Consultation Fee (BDT)</label>
+                    <input formControlName="consultationFee" type="number" class="form-control"
+                        placeholder="e.g. 500" />
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Qualifications</label>
+                    <textarea formControlName="qualifications" class="form-control" rows="2"
+                        placeholder="e.g. MBBS, MD (Cardiology), FCPS"></textarea>
+                </div>
+                <div class="col-12 mt-3">
+                    <button class="btn btn-success me-2" [disabled]="doctorForm.invalid || loading">
+                        <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
+                        {{ isEdit ? 'Update Doctor' : 'Add Doctor' }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" (click)="resetForm()">Cancel</button>
+                </div>
+                <div class="col-12 text-danger" *ngIf="error">{{ error }}</div>
+            </form>
+        </div>
+
+        <div class="row mb-3" *ngIf="!showAddDoctor">
+            <div class="col-md-4">
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+                    <input type="text" class="form-control border-start-0 ps-0" placeholder="Search doctors..."
+                        [(ngModel)]="searchTerm" (ngModelChange)="page = 1" />
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="bg-light">
+                    <tr>
+                        <th>Name</th>
+                        <th>Specialty</th>
+                        <th>Contact</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let doc of paginatedDoctors">
+                        <td>
+                            <div class="fw-bold">{{ doc.name }}</div>
+                            <small class="text-muted">{{ doc.qualifications || 'MBBS' }}</small>
+                        </td>
+                        <td>
+                            <span class="badge"
+                                [ngClass]="{'bg-success text-dark': doc.specialty === 'ENT', 'bg-info text-dark': doc.specialty !== 'ENT'}">{{
+                                doc.specialty }}</span>
+                        </td>
+                        <td>
+                            <div><i class="bi bi-envelope me-1"></i> {{ doc.email }}</div>
+                            <div class="small text-muted"><i class="bi bi-telephone me-1"></i> {{ doc.phone }}</div>
+                        </td>
+                        <td>
+                            <span class="badge" [ngClass]="doc.active ? 'bg-success' : 'bg-secondary'">{{ doc.active ?
+                                'Active' : 'Inactive' }}</span>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary me-1" title="View Details"
+                                (click)="viewDoctor(doc)"><i class="bi bi-eye"></i></button>
+                            <button class="btn btn-sm btn-outline-secondary me-1" title="Edit"
+                                (click)="editDoctor(doc)"><i class="bi bi-pencil"></i></button>
+                            <button class="btn btn-sm"
+                                [ngClass]="doc.active ? 'btn-outline-danger' : 'btn-outline-success'"
+                                (click)="toggleStatus(doc)" [title]="doc.active ? 'Deactivate' : 'Activate'"><i
+                                    class="bi" [ngClass]="doc.active ? 'bi-power' : 'bi-check-circle'"></i></button>
+                        </td>
+                    </tr>
+                    <tr *ngIf="paginatedDoctors.length === 0">
+                        <td colspan="5" class="text-center py-5 text-muted">No doctors found.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-3" *ngIf="doctors.length > 0">
+            <div class="d-flex align-items-center gap-3">
+                <span class="text-muted small">Show</span>
+                <select class="form-select form-select-sm" [(ngModel)]="pageSize" (change)="onPageSizeChange()"
+                    style="width: 70px;">
+                    <option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</option>
+                </select>
+                <span class="text-muted small">entries</span>
+            </div>
+            <div class="text-muted small border-start ps-3">
+                Showing {{ (page - 1) * pageSize + 1 }} to {{ (page * pageSize) > filteredDoctors.length ?
+                filteredDoctors.length : (page * pageSize) }} of {{ filteredDoctors.length }} doctors
+            </div>
+            <nav *ngIf="totalPages.length > 1">
+                <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item" [class.disabled]="page === 1">
+                        <button class="page-link" (click)="page = page - 1">Previous</button>
+                    </li>
+                    <li class="page-item" *ngFor="let p of totalPages" [class.active]="page === p">
+                        <button class="page-link" (click)="page = p">{{ p }}</button>
+                    </li>
+                    <li class="page-item" [class.disabled]="page === totalPages.length">
+                        <button class="page-link" (click)="page = page + 1">Next</button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <div class="modal-backdrop fade show" *ngIf="showViewModal"></div>
+        <div class="modal fade show d-block" *ngIf="showViewModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content border-0 shadow-lg overflow-hidden">
+                    <div class="modal-header text-white border-0"
+                        style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <h5 class="modal-title fw-bold"><i class="bi bi-person-badge me-2"></i>Doctor Profile</h5>
+                        <button type="button" class="btn-close btn-close-white" (click)="closeViewModal()"></button>
+                    </div>
+                    <div class="modal-body p-0">
+                        <div class="text-center py-4 bg-light border-bottom">
+                            <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-white shadow-sm text-primary fw-bold mb-3"
+                                style="width: 80px; height: 80px; font-size: 2rem; border: 4px solid rgba(255,255,255,0.8);">
+                                {{ selectedDoctor?.name?.charAt(0) }}
+                            </div>
+                            <h4 class="fw-bold text-dark mb-1">{{ selectedDoctor?.name }}</h4>
+                            <span class="badge bg-primary bg-opacity-10 text-white rounded-pill px-3 py-2">
+                                {{ selectedDoctor?.specialty }}
+                            </span>
+                        </div>
+                        <div class="p-4">
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    <div class="p-3 rounded bg-light h-100">
+                                        <small class="text-muted text-uppercase fw-bold"
+                                            style="font-size: 0.7rem;">Email Address</small>
+                                        <div class="fw-bold text-dark mt-1 text-break">{{ selectedDoctor?.email }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="p-3 rounded bg-light h-100">
+                                        <small class="text-muted text-uppercase fw-bold"
+                                            style="font-size: 0.7rem;">Phone Number</small>
+                                        <div class="fw-bold text-dark mt-1">{{ selectedDoctor?.phone }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="p-3 rounded bg-light h-100">
+                                        <small class="text-muted text-uppercase fw-bold"
+                                            style="font-size: 0.7rem;">Status</small>
+                                        <div class="mt-1">
+                                            <span class="badge"
+                                                [ngClass]="selectedDoctor?.active ? 'bg-success' : 'bg-danger'">
+                                                {{ selectedDoctor?.active ? 'Active' : 'Inactive' }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="p-3 rounded bg-light h-100">
+                                        <small class="text-muted text-uppercase fw-bold"
+                                            style="font-size: 0.7rem;">Consultation Fee</small>
+                                        <div class="fw-bold text-dark mt-1">
+                                            {{ selectedDoctor?.consultationFee ? '৳' + selectedDoctor.consultationFee :
+                                            'Not Set' }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="p-3 rounded bg-light">
+                                        <small class="text-muted text-uppercase fw-bold"
+                                            style="font-size: 0.7rem;">Qualifications</small>
+                                        <p class="fw-bold text-dark mt-1 mb-0">{{ selectedDoctor?.qualifications || 'No
+                                            qualifications listed.' }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-light border-top-0">
+                        <button type="button" class="btn btn-secondary" (click)="closeViewModal()">Close</button>
+                        <button type="button" class="btn btn-primary"
+                            (click)="editDoctor(selectedDoctor!); closeViewModal()">
+                            <i class="bi bi-pencil-square me-1"></i> Edit Profile
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

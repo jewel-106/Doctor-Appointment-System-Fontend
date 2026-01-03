@@ -1,0 +1,252 @@
+<div class="container-fluid py-4" *ngIf="!loading && appointment">
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="fw-bold text-primary mb-1">
+                        <i class="bi bi-file-text me-2"></i>Appointment Details
+                    </h2>
+                    <p class="text-muted">Appointment ID: #{{ appointment.id }}</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-secondary" (click)="goBack()">
+                        <i class="bi bi-arrow-left me-2"></i>Back
+                    </button>
+                    <button class="btn btn-outline-primary" (click)="editAppointment()" *ngIf="isAdmin || isDoctor">
+                        <i class="bi bi-pencil me-2"></i>Edit
+                    </button>
+                    <button class="btn btn-primary" (click)="printAppointment()">
+                        <i class="bi bi-printer me-2"></i>Print
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        
+        <div class="col-lg-8">
+            
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-gradient-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-person-fill me-2"></i>Patient Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <label class="text-muted small">Full Name</label>
+                                <p class="fw-bold mb-0">{{ appointment.patientName }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <label class="text-muted small">Email Address</label>
+                                <p class="fw-bold mb-0">{{ appointment.patientEmail }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <label class="text-muted small">Phone Number</label>
+                                <p class="fw-bold mb-0">{{ appointment.patientPhone }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="info-item">
+                                <label class="text-muted small">Age</label>
+                                <p class="fw-bold mb-0">{{ appointment.patientAge || 'N/A' }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="info-item">
+                                <label class="text-muted small">Gender</label>
+                                <p class="fw-bold mb-0">{{ appointment.patientGender || 'N/A' }}</p>
+                            </div>
+                        </div>
+                        <div class="col-12" *ngIf="appointment.emergencyContact">
+                            <div class="info-item">
+                                <label class="text-muted small">Emergency Contact</label>
+                                <p class="fw-bold mb-0">{{ appointment.emergencyContact }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+           
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-gradient-success text-white">
+                    <h5 class="mb-0"><i class="bi bi-calendar-check me-2"></i>Appointment Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <label class="text-muted small">Doctor</label>
+                                <p class="fw-bold mb-0">{{ appointment.doctorName || 'N/A' }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <label class="text-muted small">Specialty</label>
+                                <p class="fw-bold mb-0">{{ appointment.doctorSpecialty || 'General' }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <label class="text-muted small">Appointment Date</label>
+                                <p class="fw-bold mb-0">{{ appointment.appointmentDate }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-item">
+                                <label class="text-muted small">Appointment Time</label>
+                                <p class="fw-bold mb-0">{{ appointment.appointmentTime }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="card shadow-sm border-0 mb-4"
+                *ngIf="appointment.reason || appointment.previousPrescription || appointment.patientComment">
+                <div class="card-header bg-gradient-info text-white">
+                    <h5 class="mb-0"><i class="bi bi-clipboard-pulse me-2"></i>Medical Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-12" *ngIf="appointment.reason">
+                            <div class="info-item">
+                                <label class="text-muted small">Reason for Visit</label>
+                                <p class="mb-0">{{ appointment.reason }}</p>
+                            </div>
+                        </div>
+                        <div class="col-12" *ngIf="appointment.previousPrescription">
+                            <div class="info-item">
+                                <label class="text-muted small">Previous Prescription</label>
+                                <p class="mb-0">{{ appointment.previousPrescription }}</p>
+                            </div>
+                        </div>
+                        <div class="col-12" *ngIf="appointment.patientComment">
+                            <div class="info-item">
+                                <label class="text-muted small">Patient Comments</label>
+                                <p class="mb-0">{{ appointment.patientComment }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+          
+            <div class="card shadow-sm border-0"
+                *ngIf="appointment.notes || appointment.diagnosis || appointment.prescription">
+                <div class="card-header bg-gradient-warning text-dark">
+                    <h5 class="mb-0"><i class="bi bi-file-medical me-2"></i>Doctor's Assessment</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-12" *ngIf="appointment.diagnosis">
+                            <div class="info-item">
+                                <label class="text-muted small">Diagnosis</label>
+                                <p class="mb-0">{{ appointment.diagnosis }}</p>
+                            </div>
+                        </div>
+                        <div class="col-12" *ngIf="appointment.notes">
+                            <div class="info-item">
+                                <label class="text-muted small">Doctor's Notes / Advice</label>
+                                <p class="mb-0">{{ appointment.notes }}</p>
+                            </div>
+                        </div>
+                        <div class="col-12" *ngIf="appointment.prescription">
+                            <div class="info-item">
+                                <label class="text-muted small">Prescription</label>
+                                <p class="mb-0 prescription-text">{{ appointment.prescription }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="col-lg-4">
+           
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body text-center py-4">
+                    <div class="mb-3">
+                        <i class="bi bi-check-circle-fill fs-1" [ngClass]="{
+              'text-warning': appointment.status === 'pending',
+              'text-success': appointment.status === 'confirmed',
+              'text-primary': appointment.status === 'complete',
+              'text-danger': appointment.status === 'cancelled'
+            }"></i>
+                    </div>
+                    <h5 class="mb-2">Appointment Status</h5>
+                    <span class="badge rounded-pill px-4 py-2 fs-6" [ngClass]="{
+            'bg-warning text-dark': appointment.status === 'pending',
+            'bg-success': appointment.status === 'confirmed',
+            'bg-primary': appointment.status === 'complete',
+            'bg-danger': appointment.status === 'cancelled'
+          }">{{ appointment.status | uppercase }}</span>
+                </div>
+            </div>
+
+           
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-light">
+                    <h6 class="mb-0 fw-bold">Quick Actions</h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-outline-primary" (click)="editAppointment()" *ngIf="isAdmin || isDoctor">
+                            <i class="bi bi-pencil me-2"></i>Edit Appointment
+                        </button>
+                        <button class="btn btn-outline-success" (click)="printAppointment()">
+                            <i class="bi bi-printer me-2"></i>Print Details
+                        </button>
+                        <button class="btn btn-outline-secondary" (click)="goBack()">
+                            <i class="bi bi-arrow-left me-2"></i>Back to List
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+           
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-light">
+                    <h6 class="mb-0 fw-bold">Appointment Timeline</h6>
+                </div>
+                <div class="card-body">
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-primary"></div>
+                            <div class="timeline-content">
+                                <small class="text-muted">Created</small>
+                                <p class="mb-0 small">{{ appointment.appointmentDate }}</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item" *ngIf="appointment.status !== 'pending'">
+                            <div class="timeline-marker" [ngClass]="{
+                'bg-success': appointment.status === 'confirmed',
+                'bg-primary': appointment.status === 'complete',
+                'bg-danger': appointment.status === 'cancelled'
+              }"></div>
+                            <div class="timeline-content">
+                                <small class="text-muted">Status: {{ appointment.status | titlecase }}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid py-5" *ngIf="loading">
+    <div class="text-center">
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div>
+        <p class="mt-3 text-muted">Loading appointment details...</p>
+    </div>
+</div>

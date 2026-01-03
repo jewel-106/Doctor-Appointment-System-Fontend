@@ -1,0 +1,202 @@
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+
+            <div class="progress mb-4" style="height: 3px;">
+                <div class="progress-bar bg-primary" role="progressbar" [style.width]="(currentStep / 4) * 100 + '%'">
+                </div>
+            </div>
+
+
+            <div *ngIf="currentStep === 1" class="card shadow-sm border-0 animate-fade-in">
+                <div class="card-body p-4">
+                    <h3 class="card-title mb-4">Select Location</h3>
+
+                    <div class="mb-3">
+                        <label class="form-label">Division</label>
+                        <select class="form-select" [(ngModel)]="selectedDivisionId" (change)="onDivisionChange()">
+                            <option [ngValue]="null">Select Division</option>
+                            <option *ngFor="let div of divisions" [ngValue]="div.id">{{ div.nameEn }}</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">District</label>
+                        <select class="form-select" [(ngModel)]="selectedDistrictId" (change)="onDistrictChange()"
+                            [disabled]="!selectedDivisionId">
+                            <option [ngValue]="null">Select District</option>
+                            <option *ngFor="let dis of districts" [ngValue]="dis.id">{{ dis.nameEn }}</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Upazila (Optional)</label>
+                        <select class="form-select" [(ngModel)]="selectedUpazilaId" (change)="onUpazilaChange()"
+                            [disabled]="!selectedDistrictId">
+                            <option [ngValue]="null">Select Upazila</option>
+                            <option *ngFor="let upa of upazilas" [ngValue]="upa.id">{{ upa.nameEn }}</option>
+                        </select>
+                    </div>
+
+                    <button class="btn btn-primary w-100" (click)="searchHospitals()"
+                        [disabled]="!selectedDivisionId || loading">
+                        {{ loading ? 'Searching...' : 'Find Hospitals' }}
+                    </button>
+                </div>
+            </div>
+
+
+            <div *ngIf="currentStep === 2" class="card shadow-sm border-0 animate-fade-in">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="card-title mb-0">Select Hospital</h3>
+                        <button class="btn btn-outline-secondary btn-sm" (click)="changeArea()">Change Area</button>
+                    </div>
+
+                    <div *ngIf="hospitals.length === 0" class="text-center py-5">
+                        <p class="text-muted">No hospitals found in this area.</p>
+                    </div>
+
+                    <div class="list-group">
+                        <button *ngFor="let hospital of hospitals"
+                            class="list-group-item list-group-item-action p-3 mb-2 border rounded"
+                            (click)="selectHospital(hospital)">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1 text-primary fw-bold">{{ hospital.name }}</h5>
+                                <small class="text-muted"><i class="bi bi-geo-alt-fill"></i> {{ hospital.addressLine1
+                                    }}</small>
+                            </div>
+                            <p class="mb-1 text-muted small">{{ hospital.tagline }}</p>
+                            <small class="text-secondary">
+                                <i class="bi bi-telephone me-1"></i> {{ hospital.phonePrimary }}
+                            </small>
+                        </button>
+                    </div>
+
+                    <button class="btn btn-link mt-3" (click)="goBack()">Back</button>
+                </div>
+            </div>
+
+
+            <div *ngIf="currentStep === 3" class="card shadow-sm border-0 animate-fade-in">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h3 class="card-title mb-0">Select Doctor</h3>
+                            <p class="text-muted small mb-0">at {{ selectedHospital?.name }}</p>
+                        </div>
+                        <button class="btn btn-outline-secondary btn-sm" (click)="currentStep = 2">Change
+                            Hospital</button>
+                    </div>
+
+                    <div class="row g-3">
+                        <div *ngFor="let doctor of doctors" class="col-md-6">
+                            <div class="card h-100 border hover-shadow cursor-pointer" (click)="selectDoctor(doctor)">
+                                <div class="card-body text-center">
+                                    <div class="avatar-circle bg-light text-primary mx-auto mb-3">
+                                        <i class="bi bi-person-fill fs-1"></i>
+                                    </div>
+                                    <h5 class="card-title">{{ doctor.name }}</h5>
+                                    <p class="card-text text-muted">{{ doctor.specialty }}</p>
+                                    <button class="btn btn-sm btn-outline-primary">Select</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-link mt-3" (click)="goBack()">Back</button>
+                </div>
+            </div>
+
+
+            <div *ngIf="currentStep === 4" class="card shadow-sm border-0 animate-fade-in">
+                <div class="card-body p-4">
+                    <h3 class="card-title mb-4">Appointment Details</h3>
+
+                    <div class="alert alert-info d-flex align-items-center">
+                        <i class="bi bi-info-circle-fill fs-4 me-3"></i>
+                        <div>
+                            <strong>{{ selectedDoctor?.name }}</strong><br>
+                            {{ selectedHospital?.name }}
+                        </div>
+                    </div>
+
+                    <form [formGroup]="form" (ngSubmit)="submit()">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Patient Name</label>
+                                <input type="text" class="form-control" formControlName="patientName">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" formControlName="patientEmail">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Phone</label>
+                                <input type="tel" class="form-control" formControlName="patientPhone">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Age</label>
+                                <input type="number" class="form-control" formControlName="patientAge">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Gender</label>
+                                <select class="form-select" formControlName="patientGender">
+                                    <option value="">Select</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Date</label>
+                                <input type="date" class="form-control" formControlName="appointmentDate" [min]="today">
+                            </div>
+                            <div class="col-12" *ngIf="form.get('appointmentDate')?.value">
+                                <label class="form-label d-block">Available Time Slots</label>
+
+                                <div *ngIf="loading && availableSlots.length === 0" class="text-muted small">
+                                    <span class="spinner-border spinner-border-sm me-2" role="status"
+                                        aria-hidden="true"></span>
+                                    Loading slots...
+                                </div>
+
+                                <div *ngIf="!loading && availableSlots.length === 0"
+                                    class="alert alert-warning small py-2">
+                                    <i class="bi bi-exclamation-triangle me-2"></i> No available slots for this date.
+                                    Please choose another date.
+                                </div>
+
+                                <div class="d-flex flex-wrap gap-2" *ngIf="availableSlots.length > 0">
+                                    <button type="button" *ngFor="let slot of availableSlots" class="btn btn-sm"
+                                        [class.btn-primary]="form.get('appointmentTime')?.value === slot.startTime"
+                                        [class.btn-outline-primary]="form.get('appointmentTime')?.value !== slot.startTime"
+                                        [disabled]="slot.isBooked"
+                                        (click)="form.get('appointmentTime')?.setValue(slot.startTime)">
+                                        {{ slot.startTime }} - {{ slot.endTime }}
+                                        <span *ngIf="slot.isBooked" class="badge bg-secondary ms-1">Booked</span>
+                                    </button>
+                                </div>
+                                <!-- Hidden input to maintain form control validity -->
+                                <input type="hidden" formControlName="appointmentTime">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Reason (Optional)</label>
+                                <textarea class="form-control" formControlName="reason" rows="2"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <button type="button" class="btn btn-link" (click)="goBack()">Back</button>
+                            <button type="submit" class="btn btn-primary px-4" [disabled]="form.invalid || loading">
+                                {{ loading ? 'Booking...' : 'Confirm Booking' }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
