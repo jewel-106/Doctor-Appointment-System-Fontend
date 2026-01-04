@@ -40,6 +40,11 @@ export class AdminDashboard implements OnInit {
   hospitalChartData: ChartData<'doughnut'> = { labels: [], datasets: [] };
   doctorChartData: ChartData<'bar'> = { labels: [], datasets: [] };
   userChartData: ChartData<'pie'> = { labels: [], datasets: [] };
+
+  // Chart instances
+  private appointmentChartInstance: any = null;
+  private statusChartInstance: any = null;
+  private earningsChartInstance: any = null;
   pieChartOptions: ChartConfiguration['options'] = {
     responsive: true,
     maintainAspectRatio: false,
@@ -106,7 +111,10 @@ export class AdminDashboard implements OnInit {
       const date = new Date(d);
       return `${date.getDate()}/${date.getMonth() + 1}`;
     });
-    new (window as any).Chart(ctx, {
+    if (this.appointmentChartInstance) {
+      this.appointmentChartInstance.destroy();
+    }
+    this.appointmentChartInstance = new (window as any).Chart(ctx, {
       type: 'line',
       data: {
         labels: labels,
@@ -168,7 +176,10 @@ export class AdminDashboard implements OnInit {
     const confirmed = this.appointments.filter(a => a.status === 'confirmed').length;
     const complete = this.appointments.filter(a => a.status === 'complete').length;
     const cancelled = this.appointments.filter(a => a.status === 'cancelled').length;
-    new (window as any).Chart(ctx, {
+    if (this.statusChartInstance) {
+      this.statusChartInstance.destroy();
+    }
+    this.statusChartInstance = new (window as any).Chart(ctx, {
       type: 'doughnut',
       data: {
         labels: ['Pending', 'Confirmed', 'Complete', 'Cancelled'],
@@ -219,7 +230,10 @@ export class AdminDashboard implements OnInit {
         monthlyData[month] += consultationFee;
       }
     });
-    new (window as any).Chart(ctx, {
+    if (this.earningsChartInstance) {
+      this.earningsChartInstance.destroy();
+    }
+    this.earningsChartInstance = new (window as any).Chart(ctx, {
       type: 'bar',
       data: {
         labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
